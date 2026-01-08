@@ -1,7 +1,10 @@
+import DetailHeader from "@/components/detail-header";
 import KakaoMap from "@/components/kakao-map";
+import PeriodSection from "@/components/period-section";
+import ThumbCarousel from "@/components/thumb-carousel";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
-import { Calendar, MapPin } from "lucide-react";
+import { MapPin } from "lucide-react";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import { campaignService } from "../../_services/campaign";
@@ -23,11 +26,33 @@ export default async function CampaignsPage({ params }: Props) {
 
     return (
       <main className="pb-24 bg-white relative">
-        {/* 1. 썸네일 */}
-        <div className="relative aspect-video w-full bg-slate-100">
-          <img src={campaign.thumbnail_url} className="w-full h-full object-cover" alt={campaign.title} />
+        {/* 1. 헤더 (Fixed) */}
+        <DetailHeader />
+
+        {/* 2. 썸네일 캐러셀 */}
+        <ThumbCarousel 
+          imageUrl={campaign.thumbnail_url} 
+          status={campaign.status}
+          startDate={campaign.start_date}
+          endDate={campaign.end_date}
+        />
+
+        {/* 3. 신청 기간 섹션 */}
+        <PeriodSection
+          startDate={campaign.start_date}
+          endDate={campaign.end_date}
+          status={campaign.status}
+        />
+
+        {/* 4. 제공 혜택 */}
+        <div className="px-5 py-4 bg-white">
+          <div className="p-4 bg-slate-50 rounded-xl border border-slate-100">
+            <h3 className="font-bold mb-1 text-slate-700">제공 혜택</h3>
+            <p className="text-blue-600 font-semibold text-lg">{campaign.benefit}</p>
+          </div>
         </div>
-        {/* 2. 상세 정보 */}
+
+        {/* 5. 상세 정보 */}
         <div className="p-5 space-y-6">
           <div>
             <div className="text-sm text-slate-500 mb-1">
@@ -45,17 +70,8 @@ export default async function CampaignsPage({ params }: Props) {
               </Badge>
             </div> 
           </div>
-        {/* 혜택 박스 */}
-        <div className="bg-slate-50 p-4 rounded-xl border border-slate-100">
-          <h3 className="font-bold mb-1 text-slate-700">제공 혜택</h3>
-          <p className="text-blue-600 font-semibold text-lg">{campaign.benefit}</p>
-        </div>
         {/* 정보 리스트 */}
         <div className="space-y-3 text-sm text-slate-600">
-          <div className="flex items-center gap-2">
-            <Calendar size={16} />
-            <span>신청기간: ~ {new Date(campaign.end_date).toLocaleDateString()}</span>
-          </div>
           {/* 장소 */}
           {campaign.location && (
             <div className="flex flex-col gap-2"> {/* flex-col로 변경 */}
@@ -79,10 +95,10 @@ export default async function CampaignsPage({ params }: Props) {
         </div>
 
       </div>
-      {/* 3. 하단 고정 버튼 (Bottom Floading Action Button) */}
-      <div className="fixed bottom-0 w-full max-w-[480px] p-4 bg-white border-t border-slate-100 safe-area-bottom">
-        <Link href={`/campaigns/${campaign.id}/apply`}>
-            <Button className="w-full h-12 text-lg font-bold" disabled={campaign.status !== 'open'}>
+      {/* 3. 하단 고정 버튼 (Floating Action Button) */}
+      <div className="fixed bottom-0 w-full max-w-[480px] p-4 safe-area-bottom pointer-events-none">
+        <Link href={`/campaigns/${campaign.id}/apply`} className="pointer-events-auto">
+            <Button className="w-full h-12 text-lg font-bold rounded-xl shadow-lg" disabled={campaign.status !== 'open'}>
             {campaign.status === 'open' ? '체험단 신청하기' : '마감되었습니다'}
             </Button>
           </Link>
