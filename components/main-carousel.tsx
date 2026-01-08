@@ -76,7 +76,7 @@ export default function MainCarousel() {
           >
             {({ isActive }) => (
               <div
-                className="relative w-full aspect-[4/5] md:aspect-[2/1] rounded-lg overflow-hidden shadow-lg"
+                className="relative w-full aspect-[4/5] rounded-lg overflow-hidden shadow-lg"
               >
                 {/* 상태 배지 (캠페인 타입일 경우만) */}
                 {slide.type === 'campaign' && slide.start_date && slide.end_date && (
@@ -118,7 +118,7 @@ export default function MainCarousel() {
       </Swiper>
 
       {/* 우측 하단 숫자 인디케이터 */}
-      <div className="absolute bottom-6 right-[12%] bg-black/30 backdrop-blur-[2px] text-white/90 text-[10px] px-2 py-0.5 rounded-full z-20 font-medium tracking-wide border border-white/10 flex items-center gap-0.5 pointer-events-none">
+      <div className="absolute bottom-6 right-[6%] bg-black/30 backdrop-blur-[2px] text-white/90 text-[10px] px-2 py-0.5 rounded-full z-20 font-medium tracking-wide border border-white/10 flex items-center gap-0.5 pointer-events-none">
         <span>{currentIndex + 1}/{slides.length}</span>
         <ChevronRight size={10} strokeWidth={2.5} />
       </div>
