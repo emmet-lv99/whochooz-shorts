@@ -1,8 +1,8 @@
+import MainCarousel from '@/components/main-carousel';
 import StatusBadge from "@/components/status-badge";
 import { cn } from "@/lib/utils";
 import Link from "next/link";
 import { campaignService } from "./_services/campaign";
-
 // D-Day 계산 함수 (텍스트 표시용)
 function getDday(endDateStr: string) {
     const end = new Date(endDateStr);
@@ -23,7 +23,12 @@ export default async function Home() {
   const campaigns = await campaignService.getAllList();
 
   return (
-    <main className="pb-20">{/* Bottom Nav 공간 확보*/}
+    <main className="pb-20">
+  {/* 메인 캐러셀 */}
+  <section className="">
+    <MainCarousel />
+  </section>
+  {/* Bottom Nav 공간 확보*/}
       {/* 2. 섹션 타이틀 */}
       <section className="px-4 py-6">
         <div className="flex justify-between mb-4 items-center">
@@ -43,7 +48,7 @@ export default async function Home() {
                <div className="flex flex-col gap-3 transition-transform duration-300 hover:scale-95 active:scale-95">
                    {/* 썸네일 */}
                    <div className="relative aspect-square rounded-lg overflow-hidden bg-slate-100 border border-slate-100">
-                       <StatusBadge status={campaign.status} endDate={campaign.end_date} />
+                       <StatusBadge status={campaign.status} startDate={campaign.start_date} endDate={campaign.end_date} />
                        <img 
                           src={campaign.thumbnail_url} 
                           className={cn("w-full h-full object-cover transition-all duration-300 group-hover:scale-105 group-hover:brightness-90", isClosed && "grayscale")} 

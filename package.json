@@ -27,6 +27,7 @@
     "react-hook-form": "^7.70.0",
     "react-kakao-maps-sdk": "^1.2.0",
     "shadcn": "^3.6.2",
+    "swiper": "^12.0.3",
     "tailwind-merge": "^3.4.0",
     "textarea": "^0.3.0",
     "zod": "^4.3.5"

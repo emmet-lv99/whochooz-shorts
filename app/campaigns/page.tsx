@@ -71,7 +71,7 @@ export default async function CampaignsPage({ searchParams }: Props) {
                             <div className="flex flex-col gap-3 transition-transform duration-300 hover:scale-95 active:scale-95">
                                 {/* 썸네일 영역 */}
                                 <div className="relative aspect-square rounded-lg overflow-hidden bg-slate-100 border border-slate-100">
-                                    <StatusBadge status={campaign.status} endDate={campaign.end_date} />
+                                    <StatusBadge status={campaign.status} startDate={campaign.start_date} endDate={campaign.end_date} />
                                     <img 
                                         src={campaign.thumbnail_url} 
                                         className={cn("w-full h-full object-cover transition-all duration-300 group-hover:scale-105 group-hover:brightness-90", isClosed && "grayscale")} 

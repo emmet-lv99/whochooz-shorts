@@ -135,4 +135,6 @@
   .hover-lift:hover {
     @apply -translate-y-1 shadow-lg;
   }
+
+
 }
