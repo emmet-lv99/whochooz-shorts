@@ -31,6 +31,10 @@ export function BottomNav() {
     return null;
   }
 
+  if (pathname.includes('/shorts/')) {
+    return null;
+  }
+
   return (
     <nav className="fixed bottom-0 z-50 w-full max-w-[480px] bg-white border-t border-slate-200 safe-area-bottom">
       <div className="flex items-center justify-around h-16">

@@ -1,3 +1,4 @@
+import KakaoMap from "@/components/kakao-map";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Calendar, MapPin } from "lucide-react";
@@ -55,12 +56,22 @@ export default async function CampaignsPage({ params }: Props) {
             <Calendar size={16} />
             <span>신청기간: ~ {new Date(campaign.end_date).toLocaleDateString()}</span>
           </div>
-        {campaign.location && (
-          <div className="flex items-center gap-2">
-            <MapPin size={16} />
-            <span>장소: {campaign.location}</span>
-          </div>
-        )}
+          {/* 장소 */}
+          {campaign.location && (
+            <div className="flex flex-col gap-2"> {/* flex-col로 변경 */}
+              <div className="flex items-center gap-2">
+                <MapPin size={16} />
+                <span>장소: {campaign.location}</span>
+              </div>
+    
+              {/* 방문형일 때만 지도 노출 */}
+              {campaign.type === 'visit' && (
+                <div className="mt-2 rounded-lg overflow-hidden border border-slate-200">
+                    <KakaoMap address={campaign.location} />
+                </div>
+              )}
+            </div>
+          )}
         </div>
         {/* 본문 (HTML 등) */}
         <div className="pt-4 border-t border-slate-100">
@@ -74,8 +85,8 @@ export default async function CampaignsPage({ params }: Props) {
             <Button className="w-full h-12 text-lg font-bold" disabled={campaign.status !== 'open'}>
             {campaign.status === 'open' ? '체험단 신청하기' : '마감되었습니다'}
             </Button>
-        </Link>
+          </Link>
       </div>
-      </main>
-    )
+    </main>
+  )
 }
