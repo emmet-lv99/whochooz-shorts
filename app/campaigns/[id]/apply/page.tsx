@@ -2,6 +2,7 @@
 
 import { campaignService } from "@/app/_services/campaign";
 import { ApplyForm } from "@/components/apply-form";
+import DetailHeader from "@/components/detail-header";
 import { notFound } from "next/navigation";
 
 interface Props {
@@ -20,12 +21,16 @@ export default async function ApplyPage({ params }: Props) {
     }
 
     return (
-      <main className="bg-white min-h-screen pb-20">
-        {/* 헤더 영역 (Sticky) */}
-        <div className="p-5 border-b border-slate-100 sticky top-0 bg-white z-10 flex flex-col justify-center">
+      <main className="bg-slate-50 min-h-screen pb-24">
+        {/* 헤더 */}
+        <DetailHeader />
+
+        {/* 상단 캠페인 정보 */}
+        <div className="pt-14 px-5 py-6 bg-white border-b border-slate-100">
           <h1 className="text-xl font-bold text-slate-900">체험단 신청하기</h1>
-          <p className="text-xs text-slate-500 mt-1">{campaign.brand} - {campaign.title}</p>
+          <p className="text-sm text-slate-500 mt-1">{campaign.brand} · {campaign.title}</p>
         </div>
+
         {/* 입력 폼 (Client Component) */}
         <ApplyForm campaignId={campaign.id} />
       </main>

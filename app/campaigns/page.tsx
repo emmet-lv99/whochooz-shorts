@@ -42,19 +42,23 @@ export default async function CampaignsPage({ searchParams }: Props) {
             </header>
 
             {/* 2. 탭 */}
-            <div className="flex border-b">
+            <div className="flex items-center gap-2 px-4 pt-6 pb-3 bg-white">
                 <Link href="/campaigns?status=open" 
-                    className={cn("flex-1 py-3 text-center text-sm font-medium border-b-2 transition-colors",
-                    currentStatus === 'open' 
-                    ? "border-slate-900 text-slate-900" 
-                    : "border-transparent text-slate-400")}>
+                    className={cn(
+                        "px-3 py-1.5 text-sm font-medium rounded-md transition-colors",
+                        currentStatus === 'open' 
+                            ? "bg-slate-900 text-white" 
+                            : "text-slate-400 hover:text-slate-600"
+                    )}>
                     모집중
                 </Link>
                 <Link href="/campaigns?status=closed"
-                    className={cn("flex-1 py-3 text-center text-sm font-medium border-b-2 transition-colors",
-                    currentStatus === 'closed' 
-                    ? "border-slate-900 text-slate-900" 
-                    : "border-transparent text-slate-400")}>
+                    className={cn(
+                        "px-3 py-1.5 text-sm font-medium rounded-md transition-colors",
+                        currentStatus === 'closed' 
+                            ? "bg-slate-900 text-white" 
+                            : "text-slate-400 hover:text-slate-600"
+                    )}>
                     마감됨
                 </Link>
             </div>

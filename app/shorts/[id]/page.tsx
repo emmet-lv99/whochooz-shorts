@@ -43,7 +43,7 @@ export default async function ShortsDetailPage({ params }: Props) {
                <h1 className="text-white font-bold text-lg leading-tight">{video.title}</h1>
                {/* 연관된 캠페인이 있을 때만 표시 */}
                {video.campaigns && (
-                 <p className="text-blue-400 text-sm font-medium mt-1">@{video.campaigns.brand}</p>
+                 <p className="text-blue-600 text-sm font-medium mt-1">@{video.campaigns.brand}</p>
                )}
             </div>
 

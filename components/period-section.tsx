@@ -68,7 +68,7 @@ export default function PeriodSection({ startDate, endDate, status }: Props) {
     if (dday.isUrgent) {
       return { text: '마감임박', className: 'bg-red-500 text-white' };
     }
-    return { text: '모집중', className: 'bg-blue-500 text-white' };
+    return { text: '모집중', className: 'bg-blue-600 text-white' };
   };
 
   const badge = getBadge();
@@ -98,7 +98,7 @@ export default function PeriodSection({ startDate, endDate, status }: Props) {
       {/* 우측: D-Day 또는 마감 또는 오픈예정 */}
       <div className={cn(
         "text-2xl font-bold",
-        isClosed ? "text-slate-300" : comingSoon ? "text-slate-400" : dday.isUrgent ? "text-red-500" : "text-slate-900"
+        isClosed ? "text-slate-300" : comingSoon ? "text-slate-400" : dday.isUrgent ? "text-red-500" : "text-blue-600"
       )}>
         {isClosed ? '마감' : comingSoon ? '오픈예정' : dday.text}
       </div>
@@ -155,7 +155,7 @@ function TimerBanner({ targetDate, title }: { targetDate: string; title: string 
 
   return (
     <div className="px-5 py-4 bg-white">
-      <div className="w-full py-5 bg-slate-800 flex flex-col items-center gap-3 rounded-xl">
+      <div className="w-full py-5 bg-slate-800 flex flex-col items-center gap-3 rounded-lg">
       {/* 타이틀 */}
       <div className="text-white font-bold text-base">
         {title}

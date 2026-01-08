@@ -59,114 +59,173 @@ export function ApplyForm ({campaignId}:{campaignId: string}) {
     // 성공
     router.push('/success');
   }
+
   return (
-    <form onSubmit={handleSubmit(onSubmit)} className="space-y-6 p-5">
-      {/*1. 이름 */}
-      <div className="space-y-2">
-        <Label htmlFor="name">이름</Label>
-        <Input id="name" placeholder="홍길동" {...register('name', {required: '이름을 입력해주세요'})}
-        />
-        {errors.name && <p className="text-red-500">{errors.name.message}</p>}
-      </div>
-    
-      {/* 2. 연락처 */}
-      <div className="space-y-2">
-        <Label htmlFor="phone">연락처</Label>
-        <Input id="phone" placeholder="010-1234-5678" {...register('phone', {required: '연락처를 입력해주세요'})}
-        />
-        {errors.phone && <p className="text-red-500">{errors.phone.message}</p>} 
+    <form onSubmit={handleSubmit(onSubmit)} className="space-y-4 p-5">
+      
+      {/* 섹션 1: 기본 정보 */}
+      <div className="bg-white rounded-lg p-5 space-y-5">
+        <h2 className="text-base font-bold text-slate-900 pb-3 border-b border-slate-100">기본 정보</h2>
+        
+        {/* 이름 */}
+        <div className="space-y-2">
+          <Label htmlFor="name" className="text-sm font-medium text-slate-700">이름</Label>
+          <Input 
+            id="name" 
+            placeholder="홍길동" 
+            className="h-11 rounded-md border-slate-200 focus:border-blue-600 focus:ring-blue-600"
+            {...register('name', {required: '이름을 입력해주세요'})}
+          />
+          {errors.name && <p className="text-red-500 text-xs">{errors.name.message}</p>}
+        </div>
+      
+        {/* 연락처 */}
+        <div className="space-y-2">
+          <Label htmlFor="phone" className="text-sm font-medium text-slate-700">연락처</Label>
+          <Input 
+            id="phone" 
+            placeholder="010-1234-5678" 
+            className="h-11 rounded-md border-slate-200 focus:border-blue-600 focus:ring-blue-600"
+            {...register('phone', {required: '연락처를 입력해주세요'})}
+          />
+          {errors.phone && <p className="text-red-500 text-xs">{errors.phone.message}</p>} 
+        </div>
+
+        {/* SNS 주소 */}
+        <div className="space-y-2">
+          <Label htmlFor="sns_url" className="text-sm font-medium text-slate-700">SNS 주소</Label>
+          <Input 
+            id="sns_url" 
+            placeholder="https://www.instagram.com/..." 
+            className="h-11 rounded-md border-slate-200 focus:border-blue-600 focus:ring-blue-600"
+            {...register('sns_url', {required: 'SNS 주소를 입력해주세요'})}
+          />
+          {errors.sns_url && <p className="text-red-500 text-xs">{errors.sns_url.message}</p>} 
+        </div>
       </div>
 
-      {/* 3. SNS 주소 */}
-      <div className="space-y-2">
-        <Label htmlFor="sns_url">SNS 주소</Label>
-        <Input id="sns_url" placeholder="https://www.instagram.com/..." {...register('sns_url', {required: 'SNS 주소를 입력해주세요'})}
-        />
-        {errors.sns_url && <p className="text-red-500">{errors.sns_url.message}</p>} 
+      {/* 섹션 2: 지원 동기 */}
+      <div className="bg-white rounded-lg p-5 space-y-4">
+        <h2 className="text-base font-bold text-slate-900 pb-3 border-b border-slate-100">지원 동기</h2>
+        
+        <div className="space-y-2">
+          <Label htmlFor="content" className="text-sm font-medium text-slate-700">
+            이 캠페인에 참여하고 싶은 이유를 적어주세요.
+          </Label>
+          <Textarea 
+            id="content" 
+            placeholder="예) 해당 브랜드의 제품을 평소에 애용하고 있어 SNS에 소개하고 싶습니다."
+            rows={5}
+            className="rounded-md border-slate-200 focus:border-blue-600 focus:ring-blue-600 resize-none"
+            {...register('content', {required: '내용을 입력해주세요'})}
+          />
+          {errors.content && <p className="text-red-500 text-xs">{errors.content.message}</p>} 
+        </div>
       </div>
 
-      {/* 4. 지원 동기 */}
-      <div className="space-y-2">
-        <Label htmlFor="content">지원 동기</Label>
-        <Textarea 
-          id="content" 
-          placeholder="이 캠페인에 참여하고 싶은 이유를 적어주세요."
-          rows={4}
-          {...register('content', {required: '내용을 입력해주세요'})}
-        />
-        {errors.content && <p className="text-red-500">{errors.content.message}</p>} 
-      </div>
-
-      {/* 5. 약관 동의 */}
-      <div className="space-y-2 pt-4 border-t">
-        {/* 전체 동의 로직은 나중에 구현하고, 일단 개별 체크박스 나열 */}
+      {/* 섹션 3: 약관 동의 */}
+      <div className="bg-white rounded-lg p-5 space-y-4">
+        <h2 className="text-base font-bold text-slate-900 pb-3 border-b border-slate-100">약관 동의</h2>
 
         {/* 위약금 동의 (필수) */}
-          <div className="flex items-stert space-x-2">
-            <Controller 
+        <div className="flex items-center space-x-3 py-2">
+          <Controller 
             control={control}
             name="is_agreed_penalty"
             rules={{required: "위약금 동의는 필수입니다."}} 
             render={({field}) => (
-                <Checkbox id="penalty" checked={field.value} onCheckedChange={field.onChange} />
-              )}
-            />
-            <Label htmlFor="penalty">위약금 정책 동의 (필수)</Label>
-          </div>
-          {errors.is_agreed_penalty && <p className="text-red-500">{errors.is_agreed_penalty.message}</p>}
+              <Checkbox 
+                id="penalty" 
+                checked={field.value} 
+                onCheckedChange={field.onChange}
+                className="w-5 h-5 rounded border-slate-300"
+              />
+            )}
+          />
+          <Label htmlFor="penalty" className="text-sm text-slate-700 cursor-pointer flex-1">
+            위약금 정책 동의 <span className="text-red-500">(필수)</span>
+          </Label>
+        </div>
+        {errors.is_agreed_penalty && <p className="text-red-500 text-xs -mt-2">{errors.is_agreed_penalty.message}</p>}
 
         {/* 개인정보 동의(필수) */}
-        <div className="flex items-stert space-x-2">
+        <div className="flex items-center space-x-3 py-2">
           <Controller 
             control={control}
             name="is_agreed_privacy"
             rules={{required: "개인정보 동의는 필수입니다."}} 
             render={({field}) => (
-                <Checkbox id="privacy" checked={field.value} onCheckedChange={field.onChange} />
-              )}
-            />
-          <Label htmlFor="privacy">개인정보 처리 동의 (필수)</Label>
+              <Checkbox 
+                id="privacy" 
+                checked={field.value} 
+                onCheckedChange={field.onChange}
+                className="w-5 h-5 rounded border-slate-300"
+              />
+            )}
+          />
+          <Label htmlFor="privacy" className="text-sm text-slate-700 cursor-pointer flex-1">
+            개인정보 처리 동의 <span className="text-red-500">(필수)</span>
+          </Label>
         </div>
-        {errors.is_agreed_privacy && <p className="text-red-500">{errors.is_agreed_privacy.message}</p>}
+        {errors.is_agreed_privacy && <p className="text-red-500 text-xs -mt-2">{errors.is_agreed_privacy.message}</p>}
 
         {/* 제3자 정보 제공 동의(필수) */}
-        <div className="flex items-stert space-x-2">
+        <div className="flex items-center space-x-3 py-2">
           <Controller 
             control={control}
             name="is_agreed_third_party"
             rules={{required: "제3자 정보 제공 동의는 필수입니다."}} 
             render={({field}) => (
-                <Checkbox id="third_party" checked={field.value} onCheckedChange={field.onChange} />
-              )}
-            />
-          <Label htmlFor="third_party">제 3자 정보 제공 동의 (필수)</Label>
+              <Checkbox 
+                id="third_party" 
+                checked={field.value} 
+                onCheckedChange={field.onChange}
+                className="w-5 h-5 rounded border-slate-300"
+              />
+            )}
+          />
+          <Label htmlFor="third_party" className="text-sm text-slate-700 cursor-pointer flex-1">
+            제 3자 정보 제공 동의 <span className="text-red-500">(필수)</span>
+          </Label>
         </div>
-        {errors.is_agreed_third_party && <p className="text-red-500">{errors.is_agreed_third_party.message}</p>}
+        {errors.is_agreed_third_party && <p className="text-red-500 text-xs -mt-2">{errors.is_agreed_third_party.message}</p>}
 
         {/* 마케팅 동의(선택) */}
-        <div className="flex items-stert space-x-2">
+        <div className="flex items-center space-x-3 py-2 border-t border-slate-100 pt-4">
           <Controller 
             control={control}
             name="is_agreed_marketing"
             rules={{required: false}} 
             render={({field}) => (
-                <Checkbox id="marketing" checked={field.value} onCheckedChange={field.onChange} />
-              )}
-            />
-          <Label htmlFor="marketing">마케팅 정보 수신 동의 (선택)</Label>
+              <Checkbox 
+                id="marketing" 
+                checked={field.value} 
+                onCheckedChange={field.onChange}
+                className="w-5 h-5 rounded border-slate-300"
+              />
+            )}
+          />
+          <Label htmlFor="marketing" className="text-sm text-slate-500 cursor-pointer flex-1">
+            마케팅 정보 수신 동의 <span className="text-slate-400">(선택)</span>
+          </Label>
         </div>
       </div>
 
-      {/* 6. 제출 버튼 (하단 고정) */}
-      <div className="fixed bottom-0 left-0 right-0 p-4 bg-white border-t safe-area-bottom flex justify-center">
-        <div className="w-full max-w-[480px]">
-          <Button type="submit" className="w-full h-12 text-lg font-bold active-press" disabled={isSubmitting}>
-            {isSubmitting ? '제출 중...' : '제출하기'}
+      {/* 하단 여백 (플로팅 버튼 공간 확보) */}
+      <div className="h-4"/>
+
+      {/* 제출 버튼 (플로팅) */}
+      <div className="fixed bottom-0 left-0 right-0 p-4 safe-area-bottom pointer-events-none flex justify-center">
+        <div className="w-full max-w-[480px] pointer-events-auto">
+          <Button 
+            type="submit" 
+            className="w-full h-[50px] text-lg font-bold rounded-lg shadow-lg" 
+            disabled={isSubmitting}
+          >
+            {isSubmitting ? '제출 중...' : '신청하기'}
           </Button>
         </div>
       </div>
-      {/* 하단 버튼 공간 확보용 */}
-      <div className="h-20"/>
     </form>
   )
 }

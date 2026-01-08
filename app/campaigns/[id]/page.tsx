@@ -46,7 +46,7 @@ export default async function CampaignsPage({ params }: Props) {
 
         {/* 4. 제공 혜택 */}
         <div className="px-5 py-4 bg-white">
-          <div className="p-4 bg-slate-50 rounded-xl border border-slate-100">
+          <div className="p-4 bg-slate-50 rounded-lg border border-slate-100">
             <h3 className="font-bold mb-1 text-slate-700">제공 혜택</h3>
             <p className="text-blue-600 font-semibold text-lg">{campaign.benefit}</p>
           </div>
@@ -97,8 +97,20 @@ export default async function CampaignsPage({ params }: Props) {
       </div>
       {/* 3. 하단 고정 버튼 (Floating Action Button) */}
       <div className="fixed bottom-0 w-full max-w-[480px] p-4 safe-area-bottom pointer-events-none">
+        {/* 툴팁: 마감이 아닐 때만 표시 */}
+        {campaign.status === 'open' && (
+          <div className="flex justify-center mb-2">
+            <div className="relative bg-white px-4 py-2 rounded-full shadow-md text-sm pointer-events-auto">
+              <span>지금 </span>
+              <span className="text-red-500 font-bold">23명</span>
+              <span>이 보고 있어요.</span>
+              {/* 말풍선 꼬리 */}
+              <div className="absolute left-1/2 -translate-x-1/2 -bottom-1.5 w-3 h-3 bg-white rotate-45 shadow-sm" />
+            </div>
+          </div>
+        )}
         <Link href={`/campaigns/${campaign.id}/apply`} className="pointer-events-auto">
-            <Button className="w-full h-12 text-lg font-bold rounded-xl shadow-lg" disabled={campaign.status !== 'open'}>
+            <Button className="w-full h-[50px] text-lg font-bold rounded-lg shadow-lg" disabled={campaign.status !== 'open'}>
             {campaign.status === 'open' ? '체험단 신청하기' : '마감되었습니다'}
             </Button>
           </Link>
