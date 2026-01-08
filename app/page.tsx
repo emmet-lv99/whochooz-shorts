@@ -19,7 +19,7 @@ export default async function Home() {
         <div className="space-y-4">
         {campaigns.map((campaign) => (
           <Link href={`/campaigns/${campaign.id}`} key={campaign.id} className="block">
-            <Card className="overflow-hidden border-0 shadow-sm hover:shadow-md transition-shadow">
+            <Card className="overflow-hidden border-0 shadow-sm hover:shadow-md transition-shadow hover-lift">
               {/* 썸네일 */}
               <div className="relative aspect-video bg-slate-100">
                 <img src={campaign.thumbnail_url} className="w-full h-full object-cover" alt={campaign.title} />

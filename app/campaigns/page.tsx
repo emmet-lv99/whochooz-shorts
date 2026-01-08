@@ -47,7 +47,7 @@ export default async function CampaignsPage({ searchParams }: Props) {
             <div className="p-4 space-y-4">
                 {campaigns.map((campaign) => (
                     <Link href={`/campaigns/${campaign.id}`} key={campaign.id} className="block">
-                        <Card className="overflow-hidden border-0 shadow-sm hover:shadow-md transition-shadow">
+                        <Card className="overflow-hidden border-0 shadow-sm hover:shadow-md transition-shadow hover-lift">
                             <div className="relative aspect-video bg-slate-100">
                                 <img src={campaign.thumbnail_url} className="w-full h-full object-cover" alt={campaign.title} />
                                 <Badge className={cn("absolute top-2 right-2", campaign.status === 'open' ? "bg-blue-600" : "bg-slate-500")}>

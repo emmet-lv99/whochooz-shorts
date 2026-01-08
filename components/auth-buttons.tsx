@@ -39,14 +39,14 @@ export default function AuthButtons() {
       return (
       <div className="flex items-center gap-2">
         <span className="text-sm text-slate-500 hidden sm:inline">{user.email?.split('@')[0]}님</span>
-        <Button variant="ghost" size="sm" onClick={handleLogout} className="text-slate-500 hover:text-slate-900" >로그아웃</Button>
+        <Button variant="ghost" size="sm" onClick={handleLogout} className="text-slate-500 hover:text-slate-900 active-press" >로그아웃</Button>
       </div>
       )
     }    
 
     return (
         <Link href="/login">
-            <Button>로그인/회원가입</Button>
+            <Button className="active-press">로그인/회원가입</Button>
         </Link>
     )
 }

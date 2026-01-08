@@ -160,7 +160,7 @@ export function ApplyForm ({campaignId}:{campaignId: string}) {
       {/* 6. 제출 버튼 (하단 고정) */}
       <div className="fixed bottom-0 left-0 right-0 p-4 bg-white border-t safe-area-bottom flex justify-center">
         <div className="w-full max-w-[480px]">
-          <Button type="submit" className="w-full h-12 text-lg font-bold" disabled={isSubmitting}>
+          <Button type="submit" className="w-full h-12 text-lg font-bold active-press" disabled={isSubmitting}>
             {isSubmitting ? '제출 중...' : '제출하기'}
           </Button>
         </div>

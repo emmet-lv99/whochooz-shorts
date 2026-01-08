@@ -123,3 +123,16 @@
     @apply bg-background text-foreground;
   }
 }
+
+@layer utilities {
+  .active-press:active {
+    @apply scale-95 transition-transform duration-100;
+  }
+  
+  .hover-lift {
+    @apply transition-all duration-300;
+  }
+  .hover-lift:hover {
+    @apply -translate-y-1 shadow-lg;
+  }
+}
