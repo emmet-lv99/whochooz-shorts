@@ -60,6 +60,7 @@ export const campaignService = {
     }
     
     // 5. 결과 반환
+    console.log(data)
     return data as Campaign[];
   },
 
@@ -82,7 +83,8 @@ export const campaignService = {
   // 캠페인 신청
   async applyCampaign(campaignId: string, user: User, data: ApplyFormValues) {
     try {
-    const {error} = await supabase.from('applications').insert({
+      // 1. 신청 내역 저장
+      const {error: insertError} = await supabase.from('applications').insert({
         campaign_id: campaignId,
         user_id: user.id, // 진짜 유저 ID 사용!
         name: data.name,
@@ -95,7 +97,19 @@ export const campaignService = {
         is_agreed_third_party: data.is_agreed_third_party,
         status: 'pending',
       });
-      if(error) throw error;
+      
+      if(insertError) throw insertError;
+
+      // 2. 캠페인 신청자 수 증가 (+1) - RPC 사용 권장
+      // (DB Function: create or replace function increment_apply_count(row_id uuid) ...)
+      const { error: updateError } = await supabase.rpc('increment_apply_count', { campaign_id: campaignId });
+      
+      if (updateError) {
+          // RPC가 없거나 실패해도 신청 자체는 성공으로 처리 (단, 로깅)
+          console.warn('Failed to increment apply count. Maybe RPC missing?', updateError);
+          // Fallback: RPC 없을 경우 수동 업데이트 시도하지 않음 (복잡도 증가 방지)
+      }
+
       return {error: null} // 성공
     } catch(e) {
       console.log(e)

@@ -1,5 +1,6 @@
+import StatusBadge from "@/components/status-badge";
 import { cn } from "@/lib/utils";
-import { ChevronLeft } from "lucide-react"; // Heart 제거
+import { ChevronLeft } from "lucide-react";
 import Link from "next/link";
 import { campaignService } from "../_services/campaign";
 
@@ -59,7 +60,7 @@ export default async function CampaignsPage({ searchParams }: Props) {
             </div>
 
             {/* 3. 리스트 (2열 그리드) */}
-            <div className="p-4 grid grid-cols-2 gap-x-4 gap-y-8">
+            <div className="px-4 py-4 grid grid-cols-2 gap-x-3 gap-y-8">
                 {campaigns.map((campaign) => {
                     const dday = getDday(campaign.end_date);
                     const isClosed = campaign.status === 'closed' || dday === '마감';
@@ -67,12 +68,13 @@ export default async function CampaignsPage({ searchParams }: Props) {
                     return (
                         <Link href={`/campaigns/${campaign.id}`} key={campaign.id} className="block group">
                             {/* 카드 컴포넌트 커스텀 */}
-                            <div className="flex flex-col gap-3 hover-lift">
-                                {/* 썸네일 영역 (하트 버튼 제거됨) */}
-                                <div className="relative aspect-square rounded-2xl overflow-hidden bg-slate-100 border border-slate-100">
+                            <div className="flex flex-col gap-3 transition-transform duration-300 hover:scale-95 active:scale-95">
+                                {/* 썸네일 영역 */}
+                                <div className="relative aspect-square rounded-lg overflow-hidden bg-slate-100 border border-slate-100">
+                                    <StatusBadge status={campaign.status} endDate={campaign.end_date} />
                                     <img 
                                         src={campaign.thumbnail_url} 
-                                        className={cn("w-full h-full object-cover transition-transform duration-500 group-hover:scale-105", isClosed && "grayscale")} 
+                                        className={cn("w-full h-full object-cover transition-all duration-300 group-hover:scale-105 group-hover:brightness-90", isClosed && "grayscale")} 
                                         alt={campaign.title} 
                                     />
                                 </div>
@@ -87,9 +89,14 @@ export default async function CampaignsPage({ searchParams }: Props) {
                                     </div>
                                     
                                     {/* 타이틀 */}
-                                    <h3 className={cn("text-base font-bold leading-tight line-clamp-2", isClosed ? "text-slate-400" : "text-slate-900")}>
+                                    <h3 className={cn("text-base font-medium leading-tight line-clamp-1", isClosed ? "text-slate-400" : "text-slate-900")}>
                                         {campaign.title}
                                     </h3>
+
+                                    {/* 혜택 (가장 중요) */}
+                                    <div className={cn("text-sm font-bold line-clamp-1", isClosed ? "text-slate-400" : "text-blue-600")}>
+                                        {campaign.benefit}
+                                    </div>
 
                                     {/* 모집 인원 정보 */}
                                     <div className="text-xs text-slate-400 mt-1">
