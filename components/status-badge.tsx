@@ -13,12 +13,15 @@ interface Props {
 }
 
 export default function StatusBadge({ status, startDate, endDate, className }: Props) {
-    // 캠페인 상태 계산 (통합 유틸리티 사용)
-    const [campaignStatus, setCampaignStatus] = useState(() => 
-        getCampaignStatus({ status, startDate, endDate })
-    );
+    // 초기값 null로 설정하여 Hydration 불일치 방지
+    const [campaignStatus, setCampaignStatus] = useState<ReturnType<typeof getCampaignStatus> | null>(null);
+    const [mounted, setMounted] = useState(false);
 
     useEffect(() => {
+        // 클라이언트에서만 상태 계산
+        setMounted(true);
+        setCampaignStatus(getCampaignStatus({ status, startDate, endDate }));
+        
         // 매 초마다 상태 업데이트
         const interval = setInterval(() => {
             setCampaignStatus(getCampaignStatus({ status, startDate, endDate }));
@@ -26,7 +29,16 @@ export default function StatusBadge({ status, startDate, endDate, className }: P
         return () => clearInterval(interval);
     }, [status, startDate, endDate]);
 
-    const { isClosed, isComingSoon, isOpen, isUrgent, dday, remainingTime } = campaignStatus;
+    // 마운트 전에는 기본 배지 표시 (정적)
+    if (!mounted || !campaignStatus) {
+        return (
+            <div className={cn("absolute top-2 left-2 bg-slate-500/60 backdrop-blur-[2px] text-white border border-white/20 text-[10px] font-bold px-2 py-1 rounded-[4px] z-10", className)}>
+                로딩중...
+            </div>
+        );
+    }
+
+    const { isClosed, isComingSoon, isUrgent, dday, remainingTime } = campaignStatus;
     const timeLeft = formatRemainingTime(remainingTime);
     const timeLeftStr = `${timeLeft.hours}:${timeLeft.minutes}:${timeLeft.seconds}`;
 

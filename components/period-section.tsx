@@ -21,18 +21,31 @@ function formatDateWithDay(dateStr: string): string {
 }
 
 export default function PeriodSection({ startDate, endDate, status }: Props) {
-  // 캠페인 상태 계산 (통합 유틸리티 사용)
-  const [campaignStatus, setCampaignStatus] = useState(() => 
-    getCampaignStatus({ status, startDate, endDate })
-  );
+  // 초기값 null로 설정하여 Hydration 불일치 방지
+  const [campaignStatus, setCampaignStatus] = useState<ReturnType<typeof getCampaignStatus> | null>(null);
+  const [mounted, setMounted] = useState(false);
 
   useEffect(() => {
+    // 클라이언트에서만 상태 계산
+    setMounted(true);
+    setCampaignStatus(getCampaignStatus({ status, startDate, endDate }));
+    
     // 매 초마다 상태 업데이트
     const interval = setInterval(() => {
       setCampaignStatus(getCampaignStatus({ status, startDate, endDate }));
     }, 1000);
     return () => clearInterval(interval);
   }, [status, startDate, endDate]);
+
+  // 마운트 전에는 로딩 스켈레톤 표시
+  if (!mounted || !campaignStatus) {
+    return (
+      <div className="w-full px-5 pt-6 pb-4 bg-white animate-pulse">
+        <div className="h-4 w-24 bg-slate-200 rounded mb-2" />
+        <div className="h-6 w-40 bg-slate-200 rounded" />
+      </div>
+    );
+  }
 
   const { isClosed, isComingSoon, isOpen, isUrgent, dday, remainingTime } = campaignStatus;
 
