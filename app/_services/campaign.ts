@@ -16,6 +16,7 @@ export interface Campaign {
     end_date: string;
     type: 'visit' | 'delivery'
     location?: string;
+    period_guide?: string;  // 방문/체험 기간 안내
     recruit_count: number;
     status: 'open' | 'closed'
 }

@@ -31,7 +31,7 @@ export default function KakaoMap({address}: Props) {
     },[address])
 
     return (
-      <Map center={coords} style={{width: '100%', height: '200px'}} level={3}>
+      <Map center={coords} style={{width: '100%', height: '100px'}} level={3}>
         <MapMarker position={coords} />
       </Map>
     )
