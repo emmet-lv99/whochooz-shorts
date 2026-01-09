@@ -4,6 +4,7 @@ import PeriodSection from "@/components/period-section";
 import ThumbCarousel from "@/components/thumb-carousel";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
+import { getCampaignStatus } from "@/lib/campaign-status";
 import { MapPin } from "lucide-react";
 import Link from "next/link";
 import { notFound } from "next/navigation";
@@ -23,6 +24,14 @@ export default async function CampaignsPage({ params }: Props) {
     if(!campaign) {
         notFound();
     }
+
+    // 3. 캠페인 상태 계산 (통합 로직)
+    const campaignStatus = getCampaignStatus({
+      status: campaign.status,
+      startDate: campaign.start_date,
+      endDate: campaign.end_date,
+    });
+    const { isClosed, isComingSoon } = campaignStatus;
 
     return (
       <main className="pb-24 bg-white relative">
@@ -98,7 +107,7 @@ export default async function CampaignsPage({ params }: Props) {
       {/* 3. 하단 고정 버튼 (Floating Action Button) */}
       <div className="fixed bottom-0 w-full max-w-[480px] p-4 safe-area-bottom pointer-events-none">
         {/* 툴팁: 마감이 아닐 때만 표시 */}
-        {campaign.status === 'open' && (
+        {!isClosed && (
           <div className="flex justify-center mb-2">
             <div className="relative bg-white px-4 py-2 rounded-full shadow-md text-sm pointer-events-auto">
               <span>지금 </span>
@@ -110,8 +119,8 @@ export default async function CampaignsPage({ params }: Props) {
           </div>
         )}
         <Link href={`/campaigns/${campaign.id}/apply`} className="pointer-events-auto">
-            <Button className="w-full h-[50px] text-lg font-bold rounded-lg shadow-lg" disabled={campaign.status !== 'open'}>
-            {campaign.status === 'open' ? '체험단 신청하기' : '마감되었습니다'}
+            <Button className="w-full h-[50px] text-lg font-bold rounded-lg shadow-lg" disabled={isClosed}>
+            {isClosed ? '마감되었습니다' : '체험단 신청하기'}
             </Button>
           </Link>
       </div>

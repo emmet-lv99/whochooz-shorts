@@ -1,5 +1,6 @@
 'use client';
 
+import { formatRemainingTime, getCampaignStatus } from "@/lib/campaign-status";
 import { cn } from "@/lib/utils";
 import { useEffect, useState } from "react";
 
@@ -7,22 +8,6 @@ interface Props {
   startDate: string;
   endDate: string;
   status: 'open' | 'closed';
-}
-
-// D-Day 계산 함수
-function getDday(endDateStr: string): { text: string; isUrgent: boolean; isClosed: boolean } {
-  const end = new Date(endDateStr);
-  const now = new Date();
-  end.setHours(0, 0, 0, 0);
-  now.setHours(0, 0, 0, 0);
-
-  const diffTime = end.getTime() - now.getTime();
-  const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
-
-  if (diffDays < 0) return { text: '마감', isUrgent: false, isClosed: true };
-  if (diffDays === 0) return { text: 'D-Day', isUrgent: true, isClosed: false };
-  if (diffDays <= 3) return { text: `D-${diffDays}`, isUrgent: true, isClosed: false };
-  return { text: `D-${diffDays}`, isUrgent: false, isClosed: false };
 }
 
 // 날짜 포맷팅 함수 (1.8(목) 형태)
@@ -35,43 +20,40 @@ function formatDateWithDay(dateStr: string): string {
   return `${month}.${day}(${dayName})`;
 }
 
-// 오픈예정 여부 체크
-function isComingSoon(startDateStr: string): boolean {
-  const start = new Date(startDateStr);
-  const now = new Date();
-  return now < start;
-}
-
 export default function PeriodSection({ startDate, endDate, status }: Props) {
-  const [dday, setDday] = useState(getDday(endDate));
-  const [comingSoon, setComingSoon] = useState(isComingSoon(startDate));
+  // 캠페인 상태 계산 (통합 유틸리티 사용)
+  const [campaignStatus, setCampaignStatus] = useState(() => 
+    getCampaignStatus({ status, startDate, endDate })
+  );
 
   useEffect(() => {
-    // 매 초마다 업데이트 (자정에 D-Day 변경 반영)
+    // 매 초마다 상태 업데이트
     const interval = setInterval(() => {
-      setDday(getDday(endDate));
-      setComingSoon(isComingSoon(startDate));
+      setCampaignStatus(getCampaignStatus({ status, startDate, endDate }));
     }, 1000);
     return () => clearInterval(interval);
-  }, [startDate, endDate]);
+  }, [status, startDate, endDate]);
 
-  const isClosed = status === 'closed' || dday.isClosed;
+  const { isClosed, isComingSoon, isOpen, isUrgent, dday, remainingTime } = campaignStatus;
 
   // 상태 배지 텍스트 및 스타일
   const getBadge = () => {
-    if (comingSoon) {
+    if (isComingSoon) {
       return { text: '오픈예정', className: 'bg-slate-200 text-slate-600' };
     }
     if (isClosed) {
       return { text: '마감', className: 'bg-slate-200 text-slate-400' };
     }
-    if (dday.isUrgent) {
+    if (isUrgent) {
       return { text: '마감임박', className: 'bg-red-500 text-white' };
     }
     return { text: '모집중', className: 'bg-blue-600 text-white' };
   };
 
   const badge = getBadge();
+
+  // 타이머 표시 여부: 모집예정 또는 마감임박
+  const showTimer = isComingSoon || (isOpen && isUrgent);
 
   return (
     <>
@@ -98,17 +80,17 @@ export default function PeriodSection({ startDate, endDate, status }: Props) {
       {/* 우측: D-Day 또는 마감 또는 오픈예정 */}
       <div className={cn(
         "text-2xl font-bold",
-        isClosed ? "text-slate-300" : comingSoon ? "text-slate-400" : dday.isUrgent ? "text-red-500" : "text-blue-600"
+        isClosed ? "text-slate-300" : isComingSoon ? "text-slate-400" : isUrgent ? "text-red-500" : "text-blue-600"
       )}>
-        {isClosed ? '마감' : comingSoon ? '오픈예정' : dday.text}
+        {isClosed ? '마감' : isComingSoon ? '오픈예정' : dday}
       </div>
     </div>
 
     {/* 타이머 섹션 (오픈예정 또는 마감임박일 때만) */}
-    {(comingSoon || dday.isUrgent) && (
+    {showTimer && (
       <TimerBanner 
-        targetDate={comingSoon ? startDate : endDate}
-        title={comingSoon ? '오픈까지' : '마감까지'}
+        remainingTime={remainingTime}
+        title={isComingSoon ? '오픈까지' : '마감까지'}
       />
     )}
     </>
@@ -116,35 +98,13 @@ export default function PeriodSection({ startDate, endDate, status }: Props) {
 }
 
 // 타이머 배너 컴포넌트
-function TimerBanner({ targetDate, title }: { targetDate: string; title: string }) {
-  const [timeLeft, setTimeLeft] = useState({ hours: '00', minutes: '00', seconds: '00' });
+function TimerBanner({ remainingTime, title }: { remainingTime: number; title: string }) {
+  const [timeLeft, setTimeLeft] = useState(formatRemainingTime(remainingTime));
 
   useEffect(() => {
-    const calculateTime = () => {
-      const target = new Date(targetDate).getTime();
-      const now = new Date().getTime();
-      const diff = target - now;
-
-      if (diff <= 0) {
-        setTimeLeft({ hours: '00', minutes: '00', seconds: '00' });
-        return;
-      }
-
-      const hours = Math.floor(diff / (1000 * 60 * 60));
-      const minutes = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
-      const seconds = Math.floor((diff % (1000 * 60)) / 1000);
-
-      setTimeLeft({
-        hours: hours.toString().padStart(2, '0'),
-        minutes: minutes.toString().padStart(2, '0'),
-        seconds: seconds.toString().padStart(2, '0'),
-      });
-    };
-
-    calculateTime();
-    const interval = setInterval(calculateTime, 1000);
-    return () => clearInterval(interval);
-  }, [targetDate]);
+    // remainingTime이 변경되면 바로 업데이트
+    setTimeLeft(formatRemainingTime(remainingTime));
+  }, [remainingTime]);
 
   // 개별 숫자를 박스로 렌더링
   const DigitBox = ({ digit }: { digit: string }) => (

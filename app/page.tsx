@@ -1,22 +1,9 @@
 import MainCarousel from '@/components/main-carousel';
 import StatusBadge from "@/components/status-badge";
+import { getCampaignStatus } from '@/lib/campaign-status';
 import { cn } from "@/lib/utils";
 import Link from "next/link";
 import { campaignService } from "./_services/campaign";
-// D-Day 계산 함수 (텍스트 표시용)
-function getDday(endDateStr: string) {
-    const end = new Date(endDateStr);
-    const now = new Date();
-    end.setHours(0,0,0,0);
-    now.setHours(0,0,0,0);
-    
-    const diffTime = end.getTime() - now.getTime();
-    const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
-    
-    if (diffDays < 0) return '마감';
-    if (diffDays === 0) return '오늘마감';
-    return `D-${diffDays}`;
-}
 
 export default async function Home() {
   // 1. 서비스 데이터 호출
@@ -39,8 +26,13 @@ export default async function Home() {
         {/* 3. 캠페인 리스트 (2열 그리드) */}
         <div className="grid grid-cols-2 gap-x-3 gap-y-8">
         {campaigns.map((campaign) => {
-           const dday = getDday(campaign.end_date);
-           const isClosed = campaign.status === 'closed' || dday === '마감';
+           // 통합 유틸리티 사용
+           const campaignStatus = getCampaignStatus({
+               status: campaign.status,
+               startDate: campaign.start_date,
+               endDate: campaign.end_date,
+           });
+           const { isClosed, isComingSoon, dday } = campaignStatus;
 
            return (
             <Link href={`/campaigns/${campaign.id}`} key={campaign.id} className="block group">
@@ -60,8 +52,8 @@ export default async function Home() {
                    <div className="space-y-1">
                        {/* D-Day */}
                        <div className="flex items-center gap-2 text-xs font-bold">
-                           <span className={cn(isClosed ? "text-slate-400" : "text-red-500")}>
-                               {isClosed ? '마감' : dday}
+                           <span className={cn(isClosed ? "text-slate-400" : isComingSoon ? "text-slate-500" : "text-red-500")}>
+                               {isComingSoon ? '오픈예정' : dday}
                            </span>
                        </div>
                        
