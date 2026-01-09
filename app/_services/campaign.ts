@@ -38,29 +38,47 @@ export const campaignService = {
   },
 
   // 캠페인 리스트: 전체 가져오기
+  // status 파라미터:
+  // - 'open': 모집중 + 모집예정 (status != 'closed' AND end_date >= now)
+  // - 'closed': 마감 (status = 'closed' OR end_date < now)
   async getAllList(status?: 'open' | 'closed') {
+    const now = new Date().toISOString();
+    
     // 1. 기본 쿼리 생성
     let query = supabase
-    .from('campaigns')
-    .select('*')
-    .order('end_date', { ascending: true }); // 마감 임박순
+      .from('campaigns')
+      .select('*');
     
-    // 2. 상태 필터가 있으면 조건 추가 (Dynamic Query Building)
-    if (status) {
-      query = query.eq('status', status);
+    // 2. 상태 필터 적용 (프론트엔드 로직과 동일)
+    if (status === 'open') {
+      // 모집중 + 모집예정: status가 closed가 아니고, end_date가 현재보다 크거나 같은 것
+      query = query
+        .neq('status', 'closed')
+        .gte('end_date', now);
+    } else if (status === 'closed') {
+      // 마감: status가 closed이거나, end_date가 현재보다 작은 것
+      // Supabase .or() 사용
+      query = query.or(`status.eq.closed,end_date.lt.${now}`);
     }
     
-    // 3. 쿼리 실행
+    // 3. 정렬: 모집중은 마감 임박순, 마감은 최근 마감순
+    if (status === 'closed') {
+      query = query.order('end_date', { ascending: false });
+    } else {
+      query = query.order('end_date', { ascending: true }); // 마감 임박순
+    }
+    
+    // 4. 쿼리 실행
     const {data, error} = await query;
     
-    // 4. 에러 처리
+    // 5. 에러 처리
     if (error) {
       console.error('Error fetching all campaigns:', error);
       return [];
     }
     
-    // 5. 결과 반환
-    console.log(data)
+    // 6. 결과 반환
+    console.log(data);
     return data as Campaign[];
   },
 

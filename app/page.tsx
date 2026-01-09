@@ -50,13 +50,6 @@ export default async function Home() {
 
                    {/* 텍스트 정보 */}
                    <div className="space-y-1">
-                       {/* D-Day */}
-                       <div className="flex items-center gap-2 text-xs font-bold">
-                           <span className={cn(isClosed ? "text-slate-400" : isComingSoon ? "text-slate-500" : "text-red-500")}>
-                               {isComingSoon ? '오픈예정' : dday}
-                           </span>
-                       </div>
-                       
                        {/* 타이틀 */}
                        <h3 className={cn("text-base font-medium leading-tight line-clamp-1", isClosed ? "text-slate-400" : "text-slate-900")}>
                            {campaign.title}

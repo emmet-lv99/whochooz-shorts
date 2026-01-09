@@ -26,7 +26,7 @@ export default function StatusBadge({ status, startDate, endDate, className }: P
         return () => clearInterval(interval);
     }, [status, startDate, endDate]);
 
-    const { isClosed, isComingSoon, isOpen, isUrgent, remainingTime } = campaignStatus;
+    const { isClosed, isComingSoon, isOpen, isUrgent, dday, remainingTime } = campaignStatus;
     const timeLeft = formatRemainingTime(remainingTime);
     const timeLeftStr = `${timeLeft.hours}:${timeLeft.minutes}:${timeLeft.seconds}`;
 
@@ -71,10 +71,10 @@ export default function StatusBadge({ status, startDate, endDate, className }: P
         )
     }
 
-    // 4. 모집중
+    // 4. 모집중 (D-Day 포함)
     return (
         <div className={cn("absolute top-2 left-2 bg-blue-600/60 backdrop-blur-[2px] text-white border border-white/20 text-[10px] font-bold px-2 py-1 rounded-[4px] z-10", className)}>
-            모집중
+            모집중 {dday}
         </div>
     )
 }
