@@ -36,7 +36,7 @@ export function BottomNav() {
   }
 
   return (
-    <nav className="fixed bottom-0 z-50 w-full max-w-[480px] bg-white border-t border-slate-200 safe-area-bottom">
+    <nav className="fixed bottom-0 z-50 w-full max-w-[480px] bg-white/80 backdrop-blur-xl border-t border-white/20 safe-area-bottom">
       <div className="flex items-center justify-around h-16">
         {tabs.map((tab) => (
           <Link

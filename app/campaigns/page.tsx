@@ -15,9 +15,9 @@ export default async function CampaignsPage({ searchParams }: Props) {
     const campaigns = await campaignService.getAllList(currentStatus); 
 
     return (
-        <main className="pb-20 bg-white min-h-screen">
+        <main className="pb-20 min-h-screen">
             {/* 1. 헤더 */}
-            <header className="sticky top-0 z-10 flex items-center h-14 px-4 bg-white border-b">
+            <header className="sticky top-0 z-[99] flex items-center h-14 px-4 bg-white/70 backdrop-blur-md border-b border-white/20">
                 <Link href="/" className="mr-4">
                     <ChevronLeft className="w-6 h-6 text-slate-900" />
                 </Link>
@@ -27,7 +27,7 @@ export default async function CampaignsPage({ searchParams }: Props) {
             </header>
 
             {/* 2. 탭 */}
-            <div className="flex items-center gap-2 px-4 pt-6 pb-3 bg-white">
+            <div className="flex items-center gap-2 px-4 pt-6 pb-3">
                 <Link href="/campaigns?status=open" 
                     className={cn(
                         "px-3 py-1.5 text-sm font-medium rounded-md transition-colors",

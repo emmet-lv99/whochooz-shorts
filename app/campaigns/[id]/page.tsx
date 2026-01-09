@@ -1,12 +1,12 @@
 import CopyButton from "@/components/copy-button";
+import DetailButton from "@/components/detail-button";
 import DetailHeader from "@/components/detail-header";
+import FloatingActionBar from "@/components/floating-action-bar";
 import KakaoMap from "@/components/kakao-map";
 import PeriodSection from "@/components/period-section";
 import ThumbCarousel from "@/components/thumb-carousel";
-import { Button } from "@/components/ui/button";
 import { getCampaignStatus } from "@/lib/campaign-status";
 import { MapPin } from "lucide-react";
-import Link from "next/link";
 import { notFound } from "next/navigation";
 import { campaignService } from "../../_services/campaign";
 
@@ -75,9 +75,7 @@ export default async function CampaignsPage({ params }: Props) {
               <p className="whitespace-pre-wrap">{campaign.description}</p>
             </div>
             {/* 자세히 보기 버튼 */}
-            <Button variant="outline" className="w-full mt-4 h-11 text-slate-600 border-slate-300 shadow-none">
-              자세히 보기
-            </Button>
+            <DetailButton description={campaign.description} title={campaign.title} />
           </div>
         {/* ===== 캠페인 안내 ===== */}
         <div className="border-t border-slate-100 pt-6">
@@ -95,10 +93,16 @@ export default async function CampaignsPage({ params }: Props) {
               <span className="text-slate-900 font-medium">{campaign.benefit}</span>
             </div>
 
-            {/* 3. 방문기간 */}
+            {/* 3. 방문/체험 기한 */}
             <div className="flex">
-              <span className="w-24 text-slate-500 shrink-0">방문기간</span>
-              <span className="text-slate-900">{campaign.period_guide || '선정 후 개별 안내'}</span>
+              <span className="w-24 text-slate-500 shrink-0">방문/체험 기한</span>
+              <span className="text-slate-900">{campaign.exp_period_guide || '선정 후 14일 이내 방문/체험'}</span>
+            </div>
+
+            {/* 4. 리뷰기한 */}
+            <div className="flex">
+              <span className="w-24 text-slate-500 shrink-0">리뷰기한</span>
+              <span className="text-slate-900">{campaign.review_period_guide || '방문 후 7일 이내 등록'}</span>
             </div>
 
             {/* 4. 플랫폼 */}
@@ -139,34 +143,72 @@ export default async function CampaignsPage({ params }: Props) {
         {/* ===== 컨텐츠 안내 ===== */}
         <div className="border-t border-slate-100 pt-6">
           <h3 className="text-base font-bold text-slate-900 mb-4">컨텐츠 안내</h3>
-          <div className="space-y-3 text-sm text-slate-600">
-            {/* TODO: 컨텐츠 가이드 정보 추가 */}
-            <p className="text-slate-400">컨텐츠 가이드 정보가 여기에 표시됩니다.</p>
+          <div className="space-y-4 text-sm">
+            {/* 0. 필수 해시태그 (카드형) */}
+            {campaign.hashtags && (
+              <div className="p-4 bg-slate-50 rounded-lg border border-slate-100">
+                <div className="flex items-center justify-between mb-2">
+                  <span className="font-medium text-slate-700">필수 해시태그</span>
+                  <CopyButton text={campaign.hashtags} />
+                </div>
+                <p className="text-blue-600 font-medium">{campaign.hashtags}</p>
+              </div>
+            )}
+
+            {/* 1. 리뷰 등록 기한 */}
+            <div className="flex">
+              <span className="w-24 text-slate-500 shrink-0">리뷰 등록</span>
+              <span className="text-slate-900">{campaign.review_period_guide || '방문 후 7일 이내'}</span>
+            </div>
+
+            {/* 2. 얼굴 노출 */}
+            <div className="flex">
+              <span className="w-24 text-slate-500 shrink-0">얼굴 노출</span>
+              <span className="text-slate-900">{campaign.is_face_required ? '필수' : '선택'}</span>
+            </div>
+
+            {/* 3. 원본 제출 */}
+            <div className="flex">
+              <span className="w-24 text-slate-500 shrink-0">원본 제출</span>
+              <span className="text-slate-900">{campaign.is_original_required ? '필수' : '선택'}</span>
+            </div>
           </div>
         </div>
+
+        {/* ===== 리뷰제작 가이드 ===== */}
+        {campaign.guide && (
+          <div className="border-t border-slate-100 pt-6">
+            <h3 className="text-base font-bold text-slate-900 mb-3">리뷰제작 가이드</h3>
+            <p className="text-sm text-slate-600 whitespace-pre-wrap">{campaign.guide}</p>
+          </div>
+        )}
+
+        {/* ===== 추가 안내사항 ===== */}
+        {campaign.notice && (
+          <div className="border-t border-slate-100 pt-6">
+            <h3 className="text-base font-bold text-slate-900 mb-3">추가 안내사항</h3>
+            <p className="text-sm text-slate-600 whitespace-pre-wrap">{campaign.notice}</p>
+          </div>
+        )}
+
+        {/* ===== 주의사항 ===== */}
+        {campaign.warning && (
+          <div className="border-t border-slate-100 pt-6">
+            <h3 className="text-base font-bold text-slate-900 mb-3">주의사항</h3>
+            <div className="p-4 bg-red-50 rounded-lg border border-red-100">
+              <p className="text-sm text-red-700 whitespace-pre-wrap">{campaign.warning}</p>
+            </div>
+          </div>
+        )}
         
 
       </div>
       {/* 3. 하단 고정 버튼 (Floating Action Button) */}
-      <div className="fixed bottom-0 w-full max-w-[480px] p-4 safe-area-bottom pointer-events-none">
-        {/* 툴팁: 마감이 아닐 때만 표시 */}
-        {!isClosed && (
-          <div className="flex z-1001 justify-center mb-2">
-            <div className="relative bg-white px-4 py-2 rounded-full shadow-md text-sm pointer-events-auto">
-              <span>지금 </span>
-              <span className="text-red-500 font-bold">23명</span>
-              <span>이 보고 있어요.</span>
-              {/* 말풍선 꼬리 */}
-              <div className="absolute left-1/2 -translate-x-1/2 -bottom-1.5 w-3 h-3 bg-white rotate-45 shadow-sm" />
-            </div>
-          </div>
-        )}
-        <Link href={`/campaigns/${campaign.id}/apply`} className="pointer-events-auto">
-            <Button className="w-full h-[50px] text-lg font-bold rounded-lg shadow-lg" disabled={isClosed}>
-            {isClosed ? '마감되었습니다' : '체험단 신청하기'}
-            </Button>
-          </Link>
-      </div>
+      <FloatingActionBar 
+        campaignId={campaign.id} 
+        status={campaignStatus.state}
+        startDate={campaign.start_date}
+      />
     </main>
   )
 }

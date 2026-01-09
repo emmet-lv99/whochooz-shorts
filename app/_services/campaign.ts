@@ -16,7 +16,14 @@ export interface Campaign {
     end_date: string;
     type: 'visit' | 'delivery'
     location?: string;
-    period_guide?: string;  // 방문/체험 기간 안내
+    exp_period_guide?: string;     // 방문/체험 기한
+    review_period_guide?: string;  // 리뷰 등록 기한
+    hashtags?: string;              // 필수 해시태그
+    is_face_required?: boolean;    // 얼굴 노출 필수 여부
+    is_original_required?: boolean; // 원본 제출 필수 여부
+    guide?: string;                 // 리뷰제작 가이드
+    notice?: string;                // 추가 안내사항
+    warning?: string;               // 주의사항
     recruit_count: number;
     status: 'open' | 'closed'
 }

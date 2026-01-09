@@ -23,7 +23,7 @@ export default function DetailHeader() {
       className={cn(
         "fixed top-0 left-0 right-0 z-50 flex items-center justify-between px-4 h-14 transition-all duration-300",
         isScrolled 
-          ? "bg-white/60 backdrop-blur-md border-b border-black/5" // 스크롤 시 Glassmorphism
+          ? "bg-white/70 backdrop-blur-xl border-b border-white/20" // 스크롤 시 Glassmorphism
           : "bg-transparent" // 초기 투명
       )}
     >

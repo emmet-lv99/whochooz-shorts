@@ -215,11 +215,11 @@ export function ApplyForm ({campaignId}:{campaignId: string}) {
       <div className="h-4"/>
 
       {/* 제출 버튼 (플로팅) */}
-      <div className="fixed bottom-0 left-0 right-0 p-4 safe-area-bottom pointer-events-none flex justify-center">
-        <div className="w-full max-w-[480px] pointer-events-auto">
+      <div className="fixed bottom-0 z-[1001] w-full max-w-[480px] p-4 safe-area-bottom pointer-events-none left-1/2 -translate-x-1/2">
+        <div className="pointer-events-auto">
           <Button 
             type="submit" 
-            className="w-full h-[50px] text-lg font-bold rounded-lg shadow-lg" 
+            className="border-glow w-full h-[52px] text-lg font-bold rounded-xl shadow-2xl bg-black/65 hover:bg-black/75 backdrop-blur-md border border-white/20 text-white" 
             disabled={isSubmitting}
           >
             {isSubmitting ? '제출 중...' : '신청하기'}

@@ -32,7 +32,7 @@ export default function StatusBadge({ status, startDate, endDate, className }: P
     // 마운트 전에는 기본 배지 표시 (정적)
     if (!mounted || !campaignStatus) {
         return (
-            <div className={cn("absolute top-2 left-2 bg-slate-500/60 backdrop-blur-[2px] text-white border border-white/20 text-[10px] font-bold px-2 py-1 rounded-[4px] z-10", className)}>
+            <div className={cn("absolute top-2 left-2 bg-slate-500/60 backdrop-blur-[2px] text-white border border-white/20 text-[10px] font-bold px-2 py-1 rounded-[4px] z-[5]", className)}>
                 로딩중...
             </div>
         );
@@ -47,7 +47,7 @@ export default function StatusBadge({ status, startDate, endDate, className }: P
         return (
             <div
                 className={cn(
-                    "absolute bg-black/30 backdrop-blur-[2px] text-white/90 font-bold flex items-center justify-center gap-1 z-10 shadow-sm rounded-[4px] border border-white/10",
+                    "absolute bg-black/30 backdrop-blur-[2px] text-white/90 font-bold flex items-center justify-center gap-1 z-[5] shadow-sm rounded-[4px] border border-white/10",
                     "h-6 px-[5px] text-xs top-2 left-2 w-[calc(100%-16px)]", 
                     className
                 )}
@@ -61,7 +61,7 @@ export default function StatusBadge({ status, startDate, endDate, className }: P
     // 2. 마감
     if (isClosed) {
         return (
-            <div className={cn("absolute top-2 left-2 bg-black/60 backdrop-blur-[2px] text-white/90 border border-white/10 text-[10px] font-bold px-2 py-1 rounded-[4px] z-10", className)}>
+            <div className={cn("absolute top-2 left-2 bg-black/60 backdrop-blur-[2px] text-white/90 border border-white/10 text-[10px] font-bold px-2 py-1 rounded-[4px] z-[5]", className)}>
                 마감
             </div>
         )
@@ -72,7 +72,7 @@ export default function StatusBadge({ status, startDate, endDate, className }: P
         return (
             <div
                 className={cn(
-                    "absolute bg-black/30 backdrop-blur-[2px] text-white/90 font-bold flex items-center justify-center gap-1 z-10 shadow-sm rounded-[4px] border border-white/10",
+                    "absolute bg-black/30 backdrop-blur-[2px] text-white/90 font-bold flex items-center justify-center gap-1 z-[5] shadow-sm rounded-[4px] border border-white/10",
                     "h-6 px-[5px] text-xs top-2 left-2 w-[calc(100%-16px)]",
                     className
                 )}
@@ -85,7 +85,7 @@ export default function StatusBadge({ status, startDate, endDate, className }: P
 
     // 4. 모집중 (D-Day 포함)
     return (
-        <div className={cn("absolute top-2 left-2 bg-blue-600/60 backdrop-blur-[2px] text-white border border-white/20 text-[10px] font-bold px-2 py-1 rounded-[4px] z-10", className)}>
+        <div className={cn("absolute top-2 left-2 bg-blue-600/60 backdrop-blur-[2px] text-white border border-white/20 text-[10px] font-bold px-2 py-1 rounded-[4px] z-[5]", className)}>
             모집중 {dday}
         </div>
     )
