@@ -10,8 +10,8 @@ export default function DetailHeader() {
 
   useEffect(() => {
     const handleScroll = () => {
-      // 50px 이상 스크롤되면 헤더 스타일 변경
-      setIsScrolled(window.scrollY > 50);
+      // 10px 이상 스크롤되면 헤더 스타일 변경
+      setIsScrolled(window.scrollY > 10);
     };
 
     window.addEventListener('scroll', handleScroll);

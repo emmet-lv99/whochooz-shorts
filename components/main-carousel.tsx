@@ -55,7 +55,7 @@ export default function MainCarousel() {
   const [currentIndex, setCurrentIndex] = useState(0);
 
   return (
-    <div className="relative w-full py-4 bg-white">
+    <div className="relative w-full py-4">
       <Swiper
         modules={[Autoplay]}
         spaceBetween={8} // 간격 8px

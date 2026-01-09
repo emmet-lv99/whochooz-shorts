@@ -1,6 +1,5 @@
 import CampaignCard from "@/components/campaign-card";
 import { cn } from "@/lib/utils";
-import { ChevronLeft } from "lucide-react";
 import Link from "next/link";
 import { campaignService } from "../_services/campaign";
 
@@ -10,6 +9,8 @@ interface Props {
     };
 }    
 
+import CampaignHeader from "@/components/campaign-header"; // Import 추가
+
 export default async function CampaignsPage({ searchParams }: Props) {
     const currentStatus = searchParams.status || 'open';
     const campaigns = await campaignService.getAllList(currentStatus); 
@@ -17,14 +18,7 @@ export default async function CampaignsPage({ searchParams }: Props) {
     return (
         <main className="pb-20 min-h-screen">
             {/* 1. 헤더 */}
-            <header className="sticky top-0 z-[99] flex items-center h-14 px-4 bg-white/70 backdrop-blur-md border-b border-white/20">
-                <Link href="/" className="mr-4">
-                    <ChevronLeft className="w-6 h-6 text-slate-900" />
-                </Link>
-                <h1 className="text-lg font-bold">
-                    모든 캠페인
-                </h1>
-            </header>
+            <CampaignHeader />
 
             {/* 2. 탭 */}
             <div className="flex items-center gap-2 px-4 pt-6 pb-3">
