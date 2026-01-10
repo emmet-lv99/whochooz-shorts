@@ -1,14 +1,17 @@
-import { supabase } from "@/lib/supabase"
-import { User } from "@supabase/supabase-js"
+import { supabase } from "@/lib/supabase";
+import { User } from "@supabase/supabase-js";
 
 export const authService = {
   //  로그인
   async signInWithKakao() {
     try{
+      // 배포된 URL이 환경변수로 있으면 그걸 우선 사용, 아니면 현재 브라우저 Origin 사용
+      const redirectUrl = process.env.NEXT_PUBLIC_SITE_URL || (typeof window !== 'undefined' ? window.location.origin : 'http://localhost:3000');
+      
       const { error } = await supabase.auth.signInWithOAuth({
         provider: 'kakao',
         options: {
-          redirectTo: `${window.location.origin}/`,
+          redirectTo: redirectUrl,
         },
       })
       if (error) throw error

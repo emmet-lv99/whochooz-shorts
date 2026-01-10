@@ -1,20 +1,34 @@
 'use client'
 
 import { campaignService } from "@/app/_services/campaign";
+import { likeService } from "@/app/_services/like";
 import { useAuthStore } from "@/app/_store/useAuthStore";
 import { useModalStore } from "@/app/_store/useModalStore";
-import { LogOut, User as UserIcon } from "lucide-react";
+import { cn } from "@/lib/utils";
+import { Heart, LogOut, User as UserIcon } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 
-// 신청 내역 타입 (Service에서 반환하는 타입에 맞춤)
+// 신청 내역 타입
 interface Application {
   id: string;
   status: 'pending' | 'approved' | 'rejected';
   created_at: string;
-  // Supabase join result (table name key)
+  campaigns: {
+    id: string;
+    title: string;
+    brand: string;
+    thumbnail_url: string;
+    status: 'open' | 'closed';
+    end_date: string;
+  }
+}
+
+// 찜한 내역 타입
+interface LikeItem {
+  created_at: string;
   campaigns: {
     id: string;
     title: string;
@@ -30,26 +44,31 @@ export default function MyPage() {
   const { open } = useModalStore();
   const { user, isLoading: isAuthLoading, logout } = useAuthStore();
   
+  const [activeTab, setActiveTab] = useState<'applications' | 'likes'>('applications');
   const [applications, setApplications] = useState<Application[]>([]);
+  const [likes, setLikes] = useState<LikeItem[]>([]);
   const [isDataLoading, setIsDataLoading] = useState(true);
 
   // 데이터 로딩 & 인증 가드
   useEffect(() => {
-    // 1. 초기 인증 로딩 중이면 대기
     if (isAuthLoading) return;
 
-    // 2. 인증 로딩 끝났는데 유저 없으면 리다이렉트
     if (!user) {
       router.replace('/login');
       return;
     }
 
-    // 3. 유저 있으면 데이터 패칭 (이미 로딩했으면 스킵 가능하나 여기선 항상 최신화)
     async function loadData() {
-        if (!user) return; // TS guard
+        if (!user) return; 
         try {
-            const apps = await campaignService.getMyApplications(user.id);
-            setApplications(apps as any); 
+            // 병렬 요청으로 성능 최적화
+            const [myApps, myLikes] = await Promise.all([
+                campaignService.getMyApplications(user.id),
+                likeService.getMyLikes(user.id)
+            ]);
+            
+            setApplications(myApps as any); 
+            setLikes(myLikes as any);
         } catch (e) {
             console.error(e);
         } finally {
@@ -73,7 +92,6 @@ export default function MyPage() {
     });
   }
 
-  // 로딩 화면 (인증 체크 중이거나 데이터 로딩 중일 때)
   if (isAuthLoading || isDataLoading) {
     return (
       <div className="min-h-screen bg-slate-50 flex items-center justify-center">
@@ -84,7 +102,7 @@ export default function MyPage() {
 
   return (
     <div className="min-h-screen bg-slate-50 pb-24">
-      {/* 1. 고정 배경 (Fixed Background) */}
+      {/* 1. 고정 배경 */}
       <div className="fixed inset-0 overflow-hidden pointer-events-none">
         <div className="absolute top-[-20%] right-[-20%] w-[60%] h-[60%] rounded-full bg-purple-400/20 blur-[100px]" />
         <div className="absolute top-[20%] left-[-10%] w-[50%] h-[50%] rounded-full bg-blue-400/20 blur-[100px]" />
@@ -96,9 +114,8 @@ export default function MyPage() {
         {/* 타이틀 */}
         <h1 className="text-2xl font-bold text-slate-900 mb-6">마이페이지</h1>
 
-        {/* 프로필 카드 (Glassmorphism) */}
+        {/* 프로필 카드 */}
         <div className="relative w-full bg-white/60 backdrop-blur-xl border border-white/60 shadow-lg rounded-2xl p-6 mb-8 flex items-center gap-4">
-            {/* 프로필 이미지 */}
             <div className="w-16 h-16 rounded-full bg-slate-100 flex items-center justify-center border border-slate-200 overflow-hidden relative shadow-inner">
                {user?.user_metadata?.avatar_url ? (
                  <Image src={user.user_metadata.avatar_url} alt="Profile" fill className="object-cover" />
@@ -107,7 +124,6 @@ export default function MyPage() {
                )}
             </div>
             
-            {/* 유저 정보 */}
             <div className="flex-1">
                 <p className="text-lg font-bold text-slate-900">
                     {user?.user_metadata?.full_name || user?.email?.split('@')[0] || '사용자'}님
@@ -116,54 +132,98 @@ export default function MyPage() {
             </div>
         </div>
 
-        {/* 활동 요약 (Dashboard) */}
-        <div className="grid grid-cols-2 gap-3 mb-8">
-            <div className="bg-white/70 backdrop-blur-sm p-4 rounded-xl border border-white/50 shadow-sm text-center">
-                <p className="text-sm text-slate-500 mb-1">총 신청</p>
-                <p className="text-2xl font-bold text-slate-900">{applications.length}</p>
-            </div>
-            <div className="bg-white/70 backdrop-blur-sm p-4 rounded-xl border border-white/50 shadow-sm text-center">
-                <p className="text-sm text-slate-500 mb-1">선정됨</p>
-                <p className="text-2xl font-bold text-indigo-600">
-                    {applications.filter(a => a.status === 'approved').length}
-                </p>
-            </div>
+        {/* 탭 메뉴 */}
+        <div className="flex border-b border-slate-200/80 mb-6">
+            <button 
+                onClick={() => setActiveTab('applications')} 
+                className={cn(
+                    "flex-1 pb-3 text-sm font-medium border-b-2 transition-all", 
+                    activeTab === 'applications' 
+                        ? 'border-slate-900 text-slate-900 font-bold' 
+                        : 'border-transparent text-slate-400 hover:text-slate-600'
+                )}
+            >
+                신청 내역 <span className="ml-1 text-xs opacity-80 bg-slate-100 px-1.5 py-0.5 rounded-full">{applications.length}</span>
+            </button>
+            <button 
+                onClick={() => setActiveTab('likes')} 
+                className={cn(
+                    "flex-1 pb-3 text-sm font-medium border-b-2 transition-all", 
+                    activeTab === 'likes' 
+                        ? 'border-slate-900 text-slate-900 font-bold' 
+                        : 'border-transparent text-slate-400 hover:text-slate-600'
+                )}
+            >
+                관심 캠페인 <span className="ml-1 text-xs opacity-80 bg-slate-100 px-1.5 py-0.5 rounded-full">{likes.length}</span>
+            </button>
         </div>
 
-        {/* 신청 내역 리스트 */}
-        <div className="mb-10">
-            <h2 className="text-lg font-bold text-slate-900 mb-4">나의 캠페인 활동</h2>
-            
-            {applications.length === 0 ? (
-                <div className="bg-white/40 border border-slate-100 rounded-xl p-8 text-center text-slate-400 text-sm">
-                    아직 신청한 캠페인이 없어요.
-                    <Link href="/" className="block mt-3 text-indigo-600 underline font-medium">캠페인 둘러보기</Link>
-                </div>
-            ) : (
-                <div className="space-y-4">
-                    {applications.map((app) => (
-                        <div key={app.id} className="bg-white/80 backdrop-blur-sm border border-white/80 shadow-sm rounded-xl p-4 flex gap-4 transition-all hover:scale-[1.01]">
-                            {/* 썸네일 */}
-                            <div className="relative w-20 h-20 rounded-lg overflow-hidden bg-slate-100 flex-shrink-0 border border-slate-100">
-                                {app.campaigns?.thumbnail_url && (
-                                    <Image src={app.campaigns.thumbnail_url} alt="" fill className="object-cover" />
-                                )}
-                            </div>
-
-                            {/* 정보 */}
-                            <div className="flex-1 min-w-0 flex flex-col justify-center">
-                                <div className="flex items-center gap-2 mb-1">
-                                    <span className={`text-[10px] font-bold px-2 py-0.5 rounded-full border ${getStatusBadgeStyle(app.status)}`}>
-                                        {getStatusText(app.status)}
-                                    </span>
-                                    <span className="text-xs text-slate-400 truncate tracking-tight">{new Date(app.created_at).toLocaleDateString()} 신청</span>
+        {/* 탭 컨텐츠 */}
+        <div className="min-h-[200px]">
+            {activeTab === 'applications' ? (
+                // === 신청 내역 ===
+                applications.length === 0 ? (
+                    <EmptyState message="아직 신청한 캠페인이 없어요." linkText="캠페인 둘러보기" />
+                ) : (
+                    <div className="space-y-4">
+                        {applications.map((app) => (
+                            <Link href={`/campaigns/${app.campaigns?.id}`} key={app.id} className="block group">
+                                <div className="bg-white/80 backdrop-blur-sm border border-white/80 shadow-sm rounded-xl p-4 flex gap-4 transition-all hover:scale-[1.01] active:scale-[0.99]">
+                                    <div className="relative w-20 h-20 rounded-lg overflow-hidden bg-slate-100 flex-shrink-0 border border-slate-100">
+                                        {app.campaigns?.thumbnail_url && (
+                                            <Image src={app.campaigns.thumbnail_url} alt="" fill className="object-cover" />
+                                        )}
+                                    </div>
+                                    <div className="flex-1 min-w-0 flex flex-col justify-center">
+                                        <div className="flex items-center gap-2 mb-1">
+                                            <span className={`text-[10px] font-bold px-2 py-0.5 rounded-full border ${getStatusBadgeStyle(app.status)}`}>
+                                                {getStatusText(app.status)}
+                                            </span>
+                                            <span className="text-xs text-slate-400 truncate tracking-tight">{new Date(app.created_at).toLocaleDateString()} 신청</span>
+                                        </div>
+                                        <h3 className="text-base font-bold text-slate-900 truncate mb-0.5 group-hover:text-indigo-600 transition-colors">{app.campaigns?.title}</h3>
+                                        <p className="text-xs text-slate-500">{app.campaigns?.brand}</p>
+                                    </div>
                                 </div>
-                                <h3 className="text-base font-bold text-slate-900 truncate mb-0.5">{app.campaigns?.title}</h3>
-                                <p className="text-xs text-slate-500">{app.campaigns?.brand}</p>
-                            </div>
-                        </div>
-                    ))}
-                </div>
+                            </Link>
+                        ))}
+                    </div>
+                )
+            ) : (
+                // === 관심 캠페인 ===
+                likes.length === 0 ? (
+                    <EmptyState message="찜한 캠페인이 없어요." linkText="캠페인 구경가기" />
+                ) : (
+                    <div className="space-y-4">
+                        {likes.map((like) => (
+                             <Link href={`/campaigns/${like.campaigns?.id}`} key={like.campaigns?.id} className="block group">
+                                <div className="bg-white/80 backdrop-blur-sm border border-white/80 shadow-sm rounded-xl p-4 flex gap-4 transition-all hover:scale-[1.01] active:scale-[0.99]">
+                                    <div className="relative w-20 h-20 rounded-lg overflow-hidden bg-slate-100 flex-shrink-0 border border-slate-100">
+                                        {/* 하트 아이콘 오버레이 */}
+                                        <div className="absolute top-1 right-1 z-10 bg-black/20 p-1 rounded-full backdrop-blur-sm">
+                                            <Heart className="w-3 h-3 text-red-500 fill-red-500" />
+                                        </div>
+                                        {like.campaigns?.thumbnail_url && (
+                                            <Image src={like.campaigns.thumbnail_url} alt="" fill className="object-cover" />
+                                        )}
+                                    </div>
+                                    <div className="flex-1 min-w-0 flex flex-col justify-center">
+                                        <div className="flex items-center gap-2 mb-1">
+                                            <span className={`text-[10px] font-bold px-2 py-0.5 rounded-full border bg-pink-50 text-pink-500 border-pink-100`}>
+                                                찜함
+                                            </span>
+                                            <span className="text-xs text-slate-400 truncate tracking-tight">{like.campaigns?.brand}</span>
+                                        </div>
+                                        <h3 className="text-base font-bold text-slate-900 truncate mb-0.5 group-hover:text-indigo-600 transition-colors">{like.campaigns?.title}</h3>
+                                        <p className="text-xs text-slate-500">
+                                            {like.campaigns?.status === 'closed' ? '마감됨' : '모집중'}
+                                        </p>
+                                    </div>
+                                </div>
+                            </Link>
+                        ))}
+                    </div>
+                )
             )}
         </div>
 
@@ -183,7 +243,21 @@ export default function MyPage() {
   )
 }
 
-// 헬퍼 함수: 상태 뱃지 스타일
+function EmptyState({message, linkText}: {message: string, linkText: string}) {
+    return (
+        <div className="flex flex-col items-center justify-center py-16 text-center">
+            <div className="w-16 h-16 bg-slate-100 rounded-full flex items-center justify-center mb-4">
+                <div className="text-3xl">📭</div>
+            </div>
+            <p className="text-slate-500 text-sm mb-3">{message}</p>
+            <Link href="/" className="px-4 py-2 bg-white border border-slate-200 rounded-full text-xs font-bold text-slate-600 shadow-sm hover:bg-slate-50 transition-colors">
+                {linkText}
+            </Link>
+        </div>
+    )
+}
+
+// 헬퍼 함수
 function getStatusBadgeStyle(status: string) {
     switch(status) {
         case 'approved': return 'bg-indigo-50 text-indigo-600 border-indigo-100';
@@ -193,7 +267,6 @@ function getStatusBadgeStyle(status: string) {
     }
 }
 
-// 헬퍼 함수: 상태 텍스트
 function getStatusText(status: string) {
     switch(status) {
         case 'approved': return '선정됨';

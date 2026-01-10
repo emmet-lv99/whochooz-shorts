@@ -4,6 +4,7 @@ import authService from '@/app/_services/auth';
 import { useModalStore } from '@/app/_store/useModalStore';
 import { Button } from '@/components/ui/button';
 import { useRouter } from 'next/navigation';
+import LikeButton from './like-button';
 
 interface Props {
     campaignId: string;
@@ -17,8 +18,6 @@ export default function FloatingActionBar({ campaignId, status, startDate }: Pro
 
     const handleButtonClick = async () => {
         if (status === 'open') {
-            // 로그인 체크 (UI 반응성을 위해 로딩 표시나 즉각적인 모달이 좋음)
-            // authService.getCurrentUser()가 빠르겠지만, 확실히 check
             const user = await authService.getCurrentUser();
             
             if (!user) {
@@ -32,7 +31,6 @@ export default function FloatingActionBar({ campaignId, status, startDate }: Pro
                 return;
             }
 
-            // 로그인 되어 확인되면 이동
             router.push(`/campaigns/${campaignId}/apply`);
             return;
         }
@@ -64,12 +62,14 @@ export default function FloatingActionBar({ campaignId, status, startDate }: Pro
         }
     };
 
+    const isDisabled = status === 'closed';
+
     return (
         <div className="fixed bottom-0 z-[1001] w-full max-w-[480px] p-4 safe-area-bottom pointer-events-none">
             {/* 툴팁: 오픈 상태일 때만 표시 */}
             {status === 'open' && (
                 <div className="flex justify-center mb-3">
-                    <div className="relative bg-white px-3 py-1.5 rounded-full shadow-md text-[13px] pointer-events-auto">
+                    <div className="relative bg-white px-3 py-1.5 rounded-full shadow-md text-[13px] pointer-events-auto animate-bounce-custom">
                         <span>지금 </span>
                         <span className="text-red-500 font-bold">23명</span>
                         <span>이 보고 있어요.</span>
@@ -79,10 +79,19 @@ export default function FloatingActionBar({ campaignId, status, startDate }: Pro
                 </div>
             )}
             
-            <div className="pointer-events-auto">
+            <div className="pointer-events-auto flex items-stretch gap-3">
+                {/* 🆕 좋아요 버튼 추가 */}
+                <div className="w-[52px] h-[52px] shrink-0 flex items-center justify-center bg-white/80 backdrop-blur-md rounded-xl border border-white/40 shadow-lg">
+                    <LikeButton campaignId={campaignId} iconSize={26} variant="default" />
+                </div>
+
+                {/* 신청 버튼 */}
                 <Button 
-                    className="border-glow w-full h-[52px] text-lg font-bold rounded-xl shadow-2xl bg-black/65 hover:bg-black/75 backdrop-blur-md border border-white/20 text-white transition-all active:scale-[0.98]" 
+                    className={`flex-1 h-[52px] text-lg font-bold rounded-xl shadow-2xl backdrop-blur-md border border-white/20 text-white transition-all active:scale-[0.98]
+                        ${isDisabled ? 'bg-slate-400 cursor-not-allowed' : 'bg-black/85 hover:bg-black/90 border-glow'}
+                    `}
                     onClick={handleButtonClick}
+                    disabled={isDisabled}
                 >
                     {getButtonText()}
                 </Button>

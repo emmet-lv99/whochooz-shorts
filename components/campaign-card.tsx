@@ -5,6 +5,7 @@ import { getCampaignStatus } from "@/lib/campaign-status";
 import { cn } from "@/lib/utils";
 import Link from "next/link";
 import { useEffect, useState } from "react";
+import LikeButton from "./like-button";
 
 interface Campaign {
     id: string;
@@ -23,7 +24,7 @@ interface Props {
 }
 
 export default function CampaignCard({ campaign }: Props) {
-    // 클라이언트에서만 상태 계산 (Hydration 불일치 방지)
+    // 클라이언트에서만 상태 계산
     const [campaignStatus, setCampaignStatus] = useState<ReturnType<typeof getCampaignStatus> | null>(null);
 
     useEffect(() => {
@@ -38,27 +39,36 @@ export default function CampaignCard({ campaign }: Props) {
     const isClosed = campaignStatus?.isClosed ?? false;
 
     return (
-        <Link href={`/campaigns/${campaign.id}`} className="block group">
+        <div className="block group relative">
             <div className="flex flex-col gap-3 transition-transform duration-300 hover:scale-95 active:scale-95">
-                {/* 썸네일 */}
+                {/* 썸네일 영역 */}
                 <div className="relative aspect-square rounded-lg overflow-hidden bg-slate-100 border border-slate-100">
-                    <StatusBadge 
-                        status={campaign.status} 
-                        startDate={campaign.start_date} 
-                        endDate={campaign.end_date} 
-                    />
-                    <img 
-                        src={campaign.thumbnail_url} 
-                        className={cn(
-                            "w-full h-full object-cover transition-all duration-300 group-hover:scale-105 group-hover:brightness-90", 
-                            isClosed && "grayscale"
-                        )} 
-                        alt={campaign.title} 
-                    />
+                    <Link href={`/campaigns/${campaign.id}`} className="block w-full h-full">
+                        <StatusBadge 
+                            status={campaign.status} 
+                            startDate={campaign.start_date} 
+                            endDate={campaign.end_date} 
+                        />
+                        <img 
+                            src={campaign.thumbnail_url} 
+                            className={cn(
+                                "w-full h-full object-cover transition-all duration-300 group-hover:scale-105 group-hover:brightness-90", 
+                                isClosed && "grayscale"
+                            )} 
+                            alt={campaign.title} 
+                        />
+                    </Link>
+                    
+                    {/* 좋아요 버튼: 링크 밖, 썸네일 우측 하단에 위치 */}
+                    <div className="absolute bottom-2 right-2 z-10">
+                        <div className="w-9 h-9 flex items-center justify-center bg-black/20 backdrop-blur-md rounded-full hover:bg-black/30 transition-colors border border-white/10">
+                            <LikeButton campaignId={campaign.id} iconSize={18} variant="white" />
+                        </div>
+                    </div>
                 </div>
 
-                {/* 텍스트 정보 */}
-                <div className="space-y-1">
+                {/* 텍스트 정보 (별도 링크) */}
+                <Link href={`/campaigns/${campaign.id}`} className="space-y-1 block">
                     {/* 타이틀 */}
                     <h3 className={cn(
                         "text-base font-medium leading-tight line-clamp-1", 
@@ -79,8 +89,8 @@ export default function CampaignCard({ campaign }: Props) {
                     <div className="text-xs text-slate-400 mt-1">
                         모집 {campaign.recruit_count}명
                     </div>
-                </div>
+                </Link>
             </div>
-        </Link>
+        </div>
     );
 }
