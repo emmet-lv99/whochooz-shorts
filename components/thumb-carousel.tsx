@@ -36,6 +36,7 @@ export default function ThumbCarousel({ imageUrl, status, startDate, endDate }: 
               fill
               className="object-cover"
               priority={idx === 0}
+              sizes="100vw"
             />
           </SwiperSlide>
         ))}

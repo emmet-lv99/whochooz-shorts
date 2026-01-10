@@ -27,8 +27,6 @@ export default function MainCarousel() {
         ]);
 
         // 필터링 로직
-        // - 비로그인: all, guest
-        // - 로그인: all, user
         const filtered = allBanners.filter(b => {
              if (b.visibility === 'all') return true;
              if (user) {
@@ -63,7 +61,11 @@ export default function MainCarousel() {
         spaceBetween={8} // 간격 8px
         slidesPerView={'auto'} // 너비 자동
         centeredSlides={true}
-        loop={banners.length > 1} // 1개면 루프 안 함
+        // loop={banners.length > 2} // 3개 이상일 때만 루프 (2개일 때 경고 방지)
+        // -> Swiper 경고: slidesPerView이 'auto'이고 loop=true면 슬라이드가 충분해야 함.
+        // 일단 안전하게 banners.length > 2로 설정하거나, 
+        // 2개일 때도 돌리고 싶다면 loopSlides={banners.length} 등을 고려해야 하지만 단순하게 감.
+        loop={banners.length > 2} 
         autoplay={{
           delay: 5000,
           disableOnInteraction: false,
@@ -91,6 +93,7 @@ export default function MainCarousel() {
                     isActive ? 'scale-[1.1] duration-[10000ms]' : 'scale-100 duration-700'
                   }`}
                   priority={idx === 0}
+                  sizes="(max-width: 480px) 100vw, 480px"
                 />
                 
                 {/* 하단 그라데이션 */}

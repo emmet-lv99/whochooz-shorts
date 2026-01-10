@@ -118,7 +118,7 @@ export default function MyPage() {
         <div className="relative w-full bg-white/60 backdrop-blur-xl border border-white/60 shadow-lg rounded-lg p-6 mb-8 flex items-center gap-4">
             <div className="w-16 h-16 rounded-full bg-slate-100 flex items-center justify-center border border-slate-200 overflow-hidden relative shadow-inner">
                {user?.user_metadata?.avatar_url ? (
-                 <Image src={user.user_metadata.avatar_url} alt="Profile" fill className="object-cover" />
+                 <Image src={user.user_metadata.avatar_url} alt="Profile" fill className="object-cover" sizes="64px" />
                ) : (
                  <UserIcon className="w-8 h-8 text-slate-400" />
                )}
@@ -171,7 +171,7 @@ export default function MyPage() {
                                 <div className="bg-white/80 backdrop-blur-sm border border-white/80 shadow-sm rounded-lg p-4 flex gap-4 transition-all hover:scale-[1.01] active:scale-[0.99]">
                                     <div className="relative w-20 h-20 rounded-lg overflow-hidden bg-slate-100 flex-shrink-0 border border-slate-100">
                                         {app.campaigns?.thumbnail_url && (
-                                            <Image src={app.campaigns.thumbnail_url} alt="" fill className="object-cover" />
+                                            <Image src={app.campaigns.thumbnail_url} alt="" fill className="object-cover" sizes="80px" />
                                         )}
                                     </div>
                                     <div className="flex-1 min-w-0 flex flex-col justify-center">
@@ -204,7 +204,7 @@ export default function MyPage() {
                                             <Bookmark className="w-3.5 h-3.5 text-slate-900 fill-slate-900" />
                                         </div>
                                         {item.campaigns?.thumbnail_url && (
-                                            <Image src={item.campaigns.thumbnail_url} alt="" fill className="object-cover" />
+                                            <Image src={item.campaigns.thumbnail_url} alt="" fill className="object-cover" sizes="80px" />
                                         )}
                                     </div>
                                     <div className="flex-1 min-w-0 flex flex-col justify-center">
