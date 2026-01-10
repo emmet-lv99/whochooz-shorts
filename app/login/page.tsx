@@ -32,7 +32,7 @@ export default function LoginPage() {
 
         <button
           onClick={handleKakaoLogin}
-          className="w-full h-14 bg-[#FEE500] hover:bg-[#FDD835] text-[#191919] rounded-lg font-bold text-[17px] flex items-center justify-center gap-2 transition-colors active:scale-[0.98]"
+          className="w-full h-14 bg-[#FEE500] hover:bg-[#FDD835] text-[#191919] rounded-lg font-bold text-[17px] flex items-center justify-center gap-2 transition-colors active:scale-[0.98] border-glow"
         >
           <MessageCircle className="w-5 h-5 fill-[#191919] text-[#191919]" />
           카카오로 3초 만에 시작하기
