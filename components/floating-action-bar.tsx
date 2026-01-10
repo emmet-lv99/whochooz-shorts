@@ -4,7 +4,7 @@ import authService from '@/app/_services/auth';
 import { useModalStore } from '@/app/_store/useModalStore';
 import { Button } from '@/components/ui/button';
 import { useRouter } from 'next/navigation';
-import LikeButton from './like-button';
+import BookmarkButton from './bookmark-button';
 
 interface Props {
     campaignId: string;
@@ -80,9 +80,9 @@ export default function FloatingActionBar({ campaignId, status, startDate }: Pro
             )}
             
             <div className="pointer-events-auto flex items-stretch gap-3">
-                {/* 🆕 좋아요 버튼 추가 */}
+                {/* 🆕 북마크(저장) 버튼 */}
                 <div className="w-[52px] h-[52px] shrink-0 flex items-center justify-center bg-white/80 backdrop-blur-md rounded-lg border border-white/40 shadow-lg">
-                    <LikeButton campaignId={campaignId} iconSize={26} variant="default" />
+                    <BookmarkButton campaignId={campaignId} iconSize={26} variant="default" />
                 </div>
 
                 {/* 신청 버튼 */}

@@ -5,7 +5,7 @@ import { getCampaignStatus } from "@/lib/campaign-status";
 import { cn } from "@/lib/utils";
 import Link from "next/link";
 import { useEffect, useState } from "react";
-import LikeButton from "./like-button";
+import BookmarkButton from "./bookmark-button";
 
 interface Campaign {
     id: string;
@@ -24,7 +24,6 @@ interface Props {
 }
 
 export default function CampaignCard({ campaign }: Props) {
-    // 클라이언트에서만 상태 계산
     const [campaignStatus, setCampaignStatus] = useState<ReturnType<typeof getCampaignStatus> | null>(null);
 
     useEffect(() => {
@@ -41,7 +40,7 @@ export default function CampaignCard({ campaign }: Props) {
     return (
         <div className="block group relative">
             <div className="flex flex-col gap-3 transition-transform duration-300 hover:scale-95 active:scale-95">
-                {/* 썸네일 영역 */}
+                {/* 썸네일 영역 (rounded-lg) */}
                 <div className="relative aspect-square rounded-lg overflow-hidden bg-slate-100 border border-slate-100">
                     <Link href={`/campaigns/${campaign.id}`} className="block w-full h-full">
                         <StatusBadge 
@@ -59,10 +58,10 @@ export default function CampaignCard({ campaign }: Props) {
                         />
                     </Link>
                     
-                    {/* 좋아요 버튼: 링크 밖, 썸네일 우측 하단에 위치 */}
+                    {/* 북마크 버튼: 링크 밖, 썸네일 우측 하단 */}
                     <div className="absolute bottom-2 right-2 z-10">
                         <div className="w-9 h-9 flex items-center justify-center bg-black/20 backdrop-blur-md rounded-full hover:bg-black/30 transition-colors border border-white/10">
-                            <LikeButton campaignId={campaign.id} iconSize={18} variant="white" />
+                            <BookmarkButton campaignId={campaign.id} iconSize={18} variant="white" />
                         </div>
                     </div>
                 </div>
