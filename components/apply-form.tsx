@@ -4,6 +4,7 @@ import authService from "@/app/_services/auth";
 import { campaignService } from "@/app/_services/campaign";
 import { useRouter } from "next/navigation";
 import { Controller, useForm } from "react-hook-form";
+import { useModal } from "./providers/modal-provider";
 import { Button } from "./ui/button";
 import { Checkbox } from './ui/checkbox';
 import { Input } from "./ui/input";
@@ -28,6 +29,7 @@ export interface ApplyFormValues {
 export function ApplyForm ({campaignId}:{campaignId: string}) {
   
   const router = useRouter();
+  const { open } = useModal();
 
   // 2. 폼 훅 초기화
   const {register, handleSubmit, control, formState: {errors, isSubmitting}} = useForm<ApplyFormValues>({
@@ -44,8 +46,12 @@ export function ApplyForm ({campaignId}:{campaignId: string}) {
     // 1. 로그인 유저 확인
     const user = await authService.getCurrentUser();
     if (!user) {
-      alert("로그인이 필요한 서비스입니다.");
-      router.push("/login"); // 로그인 페이지로 이동
+      open({
+        title: '알림',
+        content: '로그인이 필요한 서비스입니다.',
+        btnText: '로그인 하러 가기',
+        onConfirm: () => router.push("/login")
+      });
       return;
     }
 
@@ -53,10 +59,14 @@ export function ApplyForm ({campaignId}:{campaignId: string}) {
     const {error} = await campaignService.applyCampaign(campaignId, user, data);
     if(error) {
       // 실패
-      alert('신청 중 오류가 발생했습니다.');
+      open({
+        title: '신청 실패',
+        content: '신청 중 오류가 발생했습니다.\n잠시 후 다시 시도해 주세요.'
+      });
       return;
     }
     // 성공
+    // 성공 페이지 이동은 UX상 모달보다 페이지 전환이 나음 (이미 구현됨)
     router.push('/success');
   }
 

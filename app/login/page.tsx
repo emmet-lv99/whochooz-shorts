@@ -1,14 +1,20 @@
 'use client'
 // app/login/page.tsx
 
-import { MessageCircle } from "lucide-react"
-import authService from "../_services/auth"
+import { useModal } from "@/components/providers/modal-provider";
+import { MessageCircle } from "lucide-react";
+import authService from "../_services/auth";
 
 export default function LoginPage() {
+  const { open } = useModal();
+
   const handleKakaoLogin = async () => {
     const {error} = await authService.signInWithKakao()
     if(error) {
-      alert('로그인에 실패했습니다.')
+      open({
+        title: '로그인 실패',
+        content: '로그인 중 오류가 발생했습니다.\n잠시 후 다시 시도해 주세요.'
+      });
     }
   }    
 

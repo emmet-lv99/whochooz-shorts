@@ -4,15 +4,26 @@ import authService from "@/app/_services/auth";
 import { User } from "@supabase/supabase-js";
 import Link from "next/link";
 import { useEffect, useState } from "react";
+import { useModal } from "./providers/modal-provider";
 import { Button } from "./ui/button";
 
 export default function AuthButtons() {
+    const { open } = useModal();
     const [user, setUser] = useState<User|null>(null)
     const [isLoading, setIsLoading] = useState(true) // 로딩 상태 추가
 
     const handleLogout = () => {
-        authService.signOut()
-        alert('로그아웃 되셨습니다.')
+        open({
+            title: '로그아웃',
+            content: '정말 로그아웃 하시겠습니까?',
+            btnText: '로그아웃',
+            cancelText: '취소',
+            onConfirm: () => {
+                authService.signOut()
+                // 로그아웃 후 별도 알림은 필요 없거나, 필요하면 여기서 open() 또 호출 가능
+                // 하지만 보통 로그아웃 처리되면 상태 변경으로 UI가 바뀜
+            }
+        });
     }
 
     useEffect(()=>{

@@ -2,6 +2,7 @@
 
 import authService from "@/app/_services/auth";
 import { campaignService } from "@/app/_services/campaign";
+import { useModal } from "@/components/providers/modal-provider";
 import { User } from "@supabase/supabase-js";
 import { LogOut, User as UserIcon } from "lucide-react";
 import Image from "next/image";
@@ -27,6 +28,7 @@ interface Application {
 
 export default function MyPage() {
   const router = useRouter();
+  const { open } = useModal();
   const [user, setUser] = useState<User | null>(null);
   const [applications, setApplications] = useState<Application[]>([]);
   const [isLoading, setIsLoading] = useState(true);
@@ -56,11 +58,17 @@ export default function MyPage() {
     init();
   }, [router]);
 
-  // ... (handleLogout 생략, 그대로 유지) ...
   const handleLogout = async () => {
-    if(!confirm('로그아웃 하시겠습니까?')) return;
-    await authService.signOut();
-    router.replace('/');
+    open({
+        title: '로그아웃',
+        content: '정말 로그아웃 하시겠습니까?',
+        btnText: '로그아웃',
+        cancelText: '취소',
+        onConfirm: async () => {
+           await authService.signOut();
+           router.replace('/');
+        }
+    });
   }
 
   // 로딩 화면

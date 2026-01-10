@@ -1,5 +1,6 @@
 import { BottomNav } from "@/components/bottom-nav";
 import CommonHeader from "@/components/common-header";
+import { ModalProvider } from "@/components/providers/modal-provider";
 import type { Metadata } from "next";
 import Script from "next/script";
 import "./globals.css";
@@ -15,7 +16,7 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="ko">{/* 언어 설정 ko로 변경 */}
+    <html lang="ko">
       <head>
         {/* Pretendard Font (CDN) */}
         <link rel="stylesheet" as="style" crossOrigin="anonymous" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard-dynamic-subset.min.css" />
@@ -31,10 +32,11 @@ export default function RootLayout({
       >
         {/* 모바일 뷰 컨테이너 (최대 너비 480px, 흰색 배경, 그림자) */}
         <div className="max-w-[480px] w-full min-h-screen relative shadow-2xl flex flex-col">
-          {/* 🆕 공통 헤더 추가 */}
-          <CommonHeader />
-          {children}
-          <BottomNav />
+          <ModalProvider>
+            <CommonHeader />
+            {children}
+            <BottomNav />
+          </ModalProvider>
         </div>
       </body>
     </html>
