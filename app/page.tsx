@@ -70,13 +70,18 @@ export default async function Home() {
 
               <div className="relative z-10 pt-10 pb-8 pl-6">
                 {/* 섹션 헤더 */}
-                <div className="text-center mb-8 pr-6">
-                  <h2 className="text-white text-2xl font-bold leading-tight mb-2">
-                    실시간 인기 숏츠 모아보기
-                  </h2>
-                  <p className="text-white/70 text-sm font-medium">
-                    생생한 후기 영상으로 먼저 만나보세요 ✨
-                  </p>
+                <div className="flex justify-between items-center mb-6 pr-6">
+                  <div>
+                    <h2 className="text-white text-2xl font-bold leading-tight mb-1.5 drop-shadow-md">
+                      캠페인 하이라이트
+                    </h2>
+                    <p className="text-white/70 text-sm font-medium tracking-tight">
+                      캠페인 후기 영상으로 먼저 만나보세요 <span className="text-yellow-200 inline-block align-middle">✨</span>
+                    </p>
+                  </div>
+                  <Link href="/shorts" className="self-start flex-shrink-0 flex items-center gap-2 bg-indigo-500/20 hover:bg-indigo-500/30 px-2 py-2 rounded-full backdrop-blur-md border border-white/10 transition-all active:scale-95 group/btn">
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="text-white/60 group-hover/btn:text-white/90 group-hover/btn:translate-x-0.5 transition-all"><path d="m9 18 6-6-6-6"/></svg>
+                  </Link>
                 </div>
 
                 {/* 가로 스크롤 영역 */}
