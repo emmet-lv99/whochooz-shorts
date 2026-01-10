@@ -5,7 +5,7 @@ import { getCampaignStatus } from "@/lib/campaign-status";
 import { cn } from "@/lib/utils";
 import Link from "next/link";
 import { useEffect, useState } from "react";
-import BookmarkButton from "./bookmark-button";
+// BookmarkButton import 제거 (코드에서 사용 안하므로)
 
 interface Campaign {
     id: string;
@@ -58,12 +58,7 @@ export default function CampaignCard({ campaign }: Props) {
                         />
                     </Link>
                     
-                    {/* 북마크 버튼: 링크 밖, 썸네일 우측 하단 */}
-                    <div className="absolute bottom-2 right-2 z-10">
-                        <div className="w-9 h-9 flex items-center justify-center bg-black/20 backdrop-blur-md rounded-full hover:bg-black/30 transition-colors border border-white/10">
-                            <BookmarkButton campaignId={campaign.id} iconSize={18} variant="white" />
-                        </div>
-                    </div>
+                    {/* 북마크 버튼 제거됨 */}
                 </div>
 
                 {/* 텍스트 정보 (별도 링크) */}
