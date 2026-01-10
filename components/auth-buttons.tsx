@@ -46,7 +46,9 @@ export default function AuthButtons() {
 
     return (
         <Link href="/login">
-            <Button className="active-press">로그인/회원가입</Button>
+            <Button className="active-press bg-slate-900/70 hover:bg-slate-900/90 backdrop-blur-md border border-white/10 shadow-lg text-white/95 hover:text-white transition-all">
+                로그인/회원가입
+            </Button>
         </Link>
     )
 }
