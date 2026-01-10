@@ -1,12 +1,12 @@
 'use client'
 // app/login/page.tsx
 
-import { useModal } from "@/components/providers/modal-provider";
+import { useModalStore } from "@/app/_store/useModalStore";
 import { MessageCircle } from "lucide-react";
 import authService from "../_services/auth";
 
 export default function LoginPage() {
-  const { open } = useModal();
+  const { open } = useModalStore();
 
   const handleKakaoLogin = async () => {
     const {error} = await authService.signInWithKakao()

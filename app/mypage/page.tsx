@@ -2,7 +2,7 @@
 
 import authService from "@/app/_services/auth";
 import { campaignService } from "@/app/_services/campaign";
-import { useModal } from "@/components/providers/modal-provider";
+import { useModalStore } from "@/app/_store/useModalStore";
 import { User } from "@supabase/supabase-js";
 import { LogOut, User as UserIcon } from "lucide-react";
 import Image from "next/image";
@@ -28,7 +28,7 @@ interface Application {
 
 export default function MyPage() {
   const router = useRouter();
-  const { open } = useModal();
+  const { open } = useModalStore();
   const [user, setUser] = useState<User | null>(null);
   const [applications, setApplications] = useState<Application[]>([]);
   const [isLoading, setIsLoading] = useState(true);

@@ -1,16 +1,16 @@
 'use client'
 
 import authService from "@/app/_services/auth";
+import { useModalStore } from "@/app/_store/useModalStore";
 import { User } from "@supabase/supabase-js";
 import Link from "next/link";
 import { useEffect, useState } from "react";
-import { useModal } from "./providers/modal-provider";
 import { Button } from "./ui/button";
 
 export default function AuthButtons() {
-    const { open } = useModal();
+    const { open } = useModalStore();
     const [user, setUser] = useState<User|null>(null)
-    const [isLoading, setIsLoading] = useState(true) // 로딩 상태 추가
+    const [isLoading, setIsLoading] = useState(true)
 
     const handleLogout = () => {
         open({
@@ -20,8 +20,6 @@ export default function AuthButtons() {
             cancelText: '취소',
             onConfirm: () => {
                 authService.signOut()
-                // 로그아웃 후 별도 알림은 필요 없거나, 필요하면 여기서 open() 또 호출 가능
-                // 하지만 보통 로그아웃 처리되면 상태 변경으로 UI가 바뀜
             }
         });
     }
@@ -30,10 +28,10 @@ export default function AuthButtons() {
       // 1. 초기 상태
       authService.getCurrentUser().then((user) => {
         setUser(user)
-        setIsLoading(false) // 로딩 완료
+        setIsLoading(false)
       })
 
-      // 2. 구독 (service가 시키는 대로 cleanup 함)
+      // 2. 구독
       const unsubscribe = authService.onAuthStateChange((user) => {
         setUser(user)
         setIsLoading(false)
@@ -41,7 +39,6 @@ export default function AuthButtons() {
       return () => unsubscribe()
     },[])
 
-    // 로딩 중일 때 깜빡임 방지용 스켈레톤
     if (isLoading) {
         return <div className="w-20 h-9 bg-slate-100 rounded animate-pulse" />
     }
