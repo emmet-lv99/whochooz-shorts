@@ -5,7 +5,7 @@ import { likeService } from "@/app/_services/like";
 import { useAuthStore } from "@/app/_store/useAuthStore";
 import { useModalStore } from "@/app/_store/useModalStore";
 import { cn } from "@/lib/utils";
-import { Heart, LogOut, User as UserIcon } from "lucide-react";
+import { Bookmark, LogOut, User as UserIcon } from "lucide-react"; // Bookmark 교체
 import Image from "next/image";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
@@ -190,18 +190,18 @@ export default function MyPage() {
                     </div>
                 )
             ) : (
-                // === 관심 캠페인 ===
+                // === 관심 캠페인 (수정됨) ===
                 likes.length === 0 ? (
-                    <EmptyState message="찜한 캠페인이 없어요." linkText="캠페인 구경가기" />
+                    <EmptyState message="저장한 캠페인이 없어요." linkText="캠페인 구경가기" />
                 ) : (
                     <div className="space-y-4">
                         {likes.map((like) => (
                              <Link href={`/campaigns/${like.campaigns?.id}`} key={like.campaigns?.id} className="block group">
                                 <div className="bg-white/80 backdrop-blur-sm border border-white/80 shadow-sm rounded-xl p-4 flex gap-4 transition-all hover:scale-[1.01] active:scale-[0.99]">
                                     <div className="relative w-20 h-20 rounded-lg overflow-hidden bg-slate-100 flex-shrink-0 border border-slate-100">
-                                        {/* 하트 아이콘 오버레이 */}
-                                        <div className="absolute top-1 right-1 z-10 bg-black/20 p-1 rounded-full backdrop-blur-sm">
-                                            <Heart className="w-3 h-3 text-red-500 fill-red-500" />
+                                        {/* 북마크 아이콘 오버레이 */}
+                                        <div className="absolute top-0 right-1 z-10 bg-white/30 p-1 rounded-b-md backdrop-blur-sm border-x border-b border-white/50 shadow-sm">
+                                            <Bookmark className="w-3.5 h-3.5 text-slate-900 fill-slate-900" />
                                         </div>
                                         {like.campaigns?.thumbnail_url && (
                                             <Image src={like.campaigns.thumbnail_url} alt="" fill className="object-cover" />
@@ -209,8 +209,9 @@ export default function MyPage() {
                                     </div>
                                     <div className="flex-1 min-w-0 flex flex-col justify-center">
                                         <div className="flex items-center gap-2 mb-1">
-                                            <span className={`text-[10px] font-bold px-2 py-0.5 rounded-full border bg-pink-50 text-pink-500 border-pink-100`}>
-                                                찜함
+                                            {/* 저장됨 뱃지: 세련된 모노톤 */}
+                                            <span className={`text-[10px] font-bold px-2 py-0.5 rounded-full border bg-slate-100 text-slate-700 border-slate-200`}>
+                                                Saved
                                             </span>
                                             <span className="text-xs text-slate-400 truncate tracking-tight">{like.campaigns?.brand}</span>
                                         </div>
@@ -247,7 +248,7 @@ function EmptyState({message, linkText}: {message: string, linkText: string}) {
     return (
         <div className="flex flex-col items-center justify-center py-16 text-center">
             <div className="w-16 h-16 bg-slate-100 rounded-full flex items-center justify-center mb-4">
-                <div className="text-3xl">📭</div>
+                <div className="text-3xl grayscale opacity-50">📂</div>
             </div>
             <p className="text-slate-500 text-sm mb-3">{message}</p>
             <Link href="/" className="px-4 py-2 bg-white border border-slate-200 rounded-full text-xs font-bold text-slate-600 shadow-sm hover:bg-slate-50 transition-colors">
@@ -257,7 +258,6 @@ function EmptyState({message, linkText}: {message: string, linkText: string}) {
     )
 }
 
-// 헬퍼 함수
 function getStatusBadgeStyle(status: string) {
     switch(status) {
         case 'approved': return 'bg-indigo-50 text-indigo-600 border-indigo-100';

@@ -4,7 +4,8 @@ import { likeService } from "@/app/_services/like"
 import { useAuthStore } from "@/app/_store/useAuthStore"
 import { useModalStore } from "@/app/_store/useModalStore"
 import { cn } from "@/lib/utils"
-import { Heart } from "lucide-react"
+// Heart -> Bookmark 교체
+import { Bookmark } from "lucide-react"
 import { useRouter } from "next/navigation"
 import { useEffect, useState } from "react"
 
@@ -40,7 +41,7 @@ export default function LikeButton({ campaignId, className, iconSize = 24, varia
         if (!user) {
             open({
                 title: '로그인 필요',
-                content: '관심 캠페인 담기는 로그인이 필요합니다.\n로그인하시겠습니까?',
+                content: '관심 캠페인 저장은 로그인이 필요합니다.\n로그인하시겠습니까?',
                 btnText: '로그인',
                 cancelText: '취소',
                 onConfirm: () => router.push('/login')
@@ -48,43 +49,42 @@ export default function LikeButton({ campaignId, className, iconSize = 24, varia
             return
         }
 
-        // 2. 낙관적 업데이트 (UI 먼저 변경)
+        // 2. 낙관적 업데이트
         const newState = !isLiked
         setIsLiked(newState)
-        if (newState) setIsAnimating(true) 
+        if (newState) setIsAnimating(true)
 
         try {
             const result = await likeService.toggleLike(campaignId, user.id)
-            if (result !== newState) setIsLiked(result) // 서버 결과와 다르면 동기화
+            if (result !== newState) setIsLiked(result)
         } catch (error) {
             console.error(error)
-            setIsLiked(!newState) // 에러 시 롤백
+            setIsLiked(!newState)
         }
     }
 
-    // 스타일 설정
-    const strokeColor = variant === 'white' 
-        ? (isLiked ? 'text-red-500' : 'text-white') 
-        : (isLiked ? 'text-red-500' : 'text-slate-400');
+    // 스타일 설정 (모던한 느낌: 저장 시 검정색 fill)
+    const activeColor = "fill-slate-900 text-slate-900"; 
+    const inactiveColor = variant === 'white' ? "text-white" : "text-slate-400";
+    // 마이페이지나 흰 배경에서는 slate-400이 깔끔함.
 
     return (
         <button 
             onClick={handleClick}
             className={cn(
-                "relative flex items-center justify-center transition-transform active:scale-75 cursor-pointer z-10 p-2",
-                isAnimating && "animate-bounce", // 간단한 바운스 효과
+                "relative flex items-center justify-center transition-transform active:scale-90 cursor-pointer z-10 p-2",
+                isAnimating && "animate-bookmark-bounce", // 커스텀 애니메이션 클래스 필요하면 추가, 여기선 scale로 충분
                 className
             )}
-            style={{ animationDuration: '0.4s' }}
             onAnimationEnd={() => setIsAnimating(false)}
         >
-            <Heart 
+            <Bookmark 
                size={iconSize} 
                className={cn(
-                 "transition-colors duration-200",
-                 isLiked ? "fill-red-500 text-red-500" : strokeColor
+                 "transition-all duration-300",
+                 isLiked ? activeColor : inactiveColor
                )}
-               strokeWidth={2}
+               strokeWidth={isLiked ? 0 : 1.5} // 채워졌을 땐 외곽선 없음
             />
         </button>
     )

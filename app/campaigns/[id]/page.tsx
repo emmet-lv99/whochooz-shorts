@@ -7,6 +7,7 @@ import PeriodSection from "@/components/period-section";
 import ThumbCarousel from "@/components/thumb-carousel";
 import { getCampaignStatus } from "@/lib/campaign-status";
 import { MapPin } from "lucide-react";
+import { Metadata } from "next";
 import { notFound } from "next/navigation";
 import { campaignService } from "../../_services/campaign";
 
@@ -14,6 +15,42 @@ interface Props {
     params: {
         id: string;
     };
+}
+
+// 동적 메타데이터 생성 (SEO & 공유하기 썸네일)
+export async function generateMetadata({ params }: Props): Promise<Metadata> {
+    const campaign = await campaignService.getDetail(params.id);
+    
+    if (!campaign) {
+        return {
+            title: '캠페인을 찾을 수 없습니다.',
+        }
+    }
+
+    return {
+        title: `${campaign.title} | 후추즈`,
+        description: `[${campaign.brand}] ${campaign.benefit} - 지금 바로 신청하세요!`,
+        openGraph: {
+            title: `[모집중] ${campaign.title}`,
+            description: campaign.benefit,
+            images: [
+                {
+                    url: campaign.thumbnail_url,
+                    width: 800,
+                    height: 800,
+                    alt: campaign.title,
+                }
+            ],
+            locale: 'ko_KR',
+            type: 'website',
+        },
+        twitter: {
+            card: 'summary_large_image',
+            title: campaign.title,
+            description: campaign.benefit,
+            images: [campaign.thumbnail_url],
+        }
+    }
 }
 
 export default async function CampaignsPage({ params }: Props) {
@@ -31,7 +68,6 @@ export default async function CampaignsPage({ params }: Props) {
       startDate: campaign.start_date,
       endDate: campaign.end_date,
     });
-    const { isClosed, isComingSoon } = campaignStatus;
 
     return (
       <main className="pb-24 bg-white relative">
@@ -201,8 +237,7 @@ export default async function CampaignsPage({ params }: Props) {
           </div>
         )}
         
-
-      </div>
+        </div>
       {/* 3. 하단 고정 버튼 (Floating Action Button) */}
       <FloatingActionBar 
         campaignId={campaign.id} 
