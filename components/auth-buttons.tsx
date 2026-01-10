@@ -1,16 +1,13 @@
 'use client'
 
-import authService from "@/app/_services/auth";
+import { useAuthStore } from "@/app/_store/useAuthStore";
 import { useModalStore } from "@/app/_store/useModalStore";
-import { User } from "@supabase/supabase-js";
 import Link from "next/link";
-import { useEffect, useState } from "react";
 import { Button } from "./ui/button";
 
 export default function AuthButtons() {
     const { open } = useModalStore();
-    const [user, setUser] = useState<User|null>(null)
-    const [isLoading, setIsLoading] = useState(true)
+    const { user, isLoading, logout } = useAuthStore();
 
     const handleLogout = () => {
         open({
@@ -19,25 +16,10 @@ export default function AuthButtons() {
             btnText: '로그아웃',
             cancelText: '취소',
             onConfirm: () => {
-                authService.signOut()
+                logout(); // Store action 사용
             }
         });
     }
-
-    useEffect(()=>{
-      // 1. 초기 상태
-      authService.getCurrentUser().then((user) => {
-        setUser(user)
-        setIsLoading(false)
-      })
-
-      // 2. 구독
-      const unsubscribe = authService.onAuthStateChange((user) => {
-        setUser(user)
-        setIsLoading(false)
-      })
-      return () => unsubscribe()
-    },[])
 
     if (isLoading) {
         return <div className="w-20 h-9 bg-slate-100 rounded animate-pulse" />

@@ -1,7 +1,7 @@
 'use client'
 
-import authService from "@/app/_services/auth";
 import { campaignService } from "@/app/_services/campaign";
+import { useAuthStore } from "@/app/_store/useAuthStore";
 import { useModalStore } from "@/app/_store/useModalStore";
 import { useRouter } from "next/navigation";
 import { Controller, useForm } from "react-hook-form";
@@ -30,6 +30,7 @@ export function ApplyForm ({campaignId}:{campaignId: string}) {
   
   const router = useRouter();
   const { open } = useModalStore();
+  const { user } = useAuthStore(); // Global Auth State
 
   // 2. 폼 훅 초기화
   const {register, handleSubmit, control, formState: {errors, isSubmitting}} = useForm<ApplyFormValues>({
@@ -43,8 +44,7 @@ export function ApplyForm ({campaignId}:{campaignId: string}) {
 
   // 3. 제출 핸들러
   const onSubmit = async (data: ApplyFormValues) => {
-    // 1. 로그인 유저 확인
-    const user = await authService.getCurrentUser();
+    // 1. 로그인 유저 확인 (Store 이용)
     if (!user) {
       open({
         title: '알림',

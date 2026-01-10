@@ -1,9 +1,8 @@
 'use client'
 
-import authService from "@/app/_services/auth";
 import { campaignService } from "@/app/_services/campaign";
+import { useAuthStore } from "@/app/_store/useAuthStore";
 import { useModalStore } from "@/app/_store/useModalStore";
-import { User } from "@supabase/supabase-js";
 import { LogOut, User as UserIcon } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
@@ -29,34 +28,37 @@ interface Application {
 export default function MyPage() {
   const router = useRouter();
   const { open } = useModalStore();
-  const [user, setUser] = useState<User | null>(null);
+  const { user, isLoading: isAuthLoading, logout } = useAuthStore();
+  
   const [applications, setApplications] = useState<Application[]>([]);
-  const [isLoading, setIsLoading] = useState(true);
+  const [isDataLoading, setIsDataLoading] = useState(true);
 
+  // 데이터 로딩 & 인증 가드
   useEffect(() => {
-    async function init() {
-      // 1. 유저 확인
-      const currentUser = await authService.getCurrentUser();
-      
-      if (!currentUser) {
-        // 비로그인 상태면 로그인 페이지로
-        router.replace('/login');
-        return;
-      }
-      setUser(currentUser);
+    // 1. 초기 인증 로딩 중이면 대기
+    if (isAuthLoading) return;
 
-      // 2. 신청 내역 가져오기
-      const apps = await campaignService.getMyApplications(currentUser.id);
-      
-      // 데이터 확인용 로그
-      console.log('My Applications:', apps);
-      
-      setApplications(apps as any); 
-      setIsLoading(false);
+    // 2. 인증 로딩 끝났는데 유저 없으면 리다이렉트
+    if (!user) {
+      router.replace('/login');
+      return;
+    }
+
+    // 3. 유저 있으면 데이터 패칭 (이미 로딩했으면 스킵 가능하나 여기선 항상 최신화)
+    async function loadData() {
+        if (!user) return; // TS guard
+        try {
+            const apps = await campaignService.getMyApplications(user.id);
+            setApplications(apps as any); 
+        } catch (e) {
+            console.error(e);
+        } finally {
+            setIsDataLoading(false);
+        }
     }
     
-    init();
-  }, [router]);
+    loadData();
+  }, [user, isAuthLoading, router]);
 
   const handleLogout = async () => {
     open({
@@ -65,14 +67,14 @@ export default function MyPage() {
         btnText: '로그아웃',
         cancelText: '취소',
         onConfirm: async () => {
-           await authService.signOut();
+           await logout();
            router.replace('/');
         }
     });
   }
 
-  // 로딩 화면
-  if (isLoading) {
+  // 로딩 화면 (인증 체크 중이거나 데이터 로딩 중일 때)
+  if (isAuthLoading || isDataLoading) {
     return (
       <div className="min-h-screen bg-slate-50 flex items-center justify-center">
          <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-slate-900"></div>
