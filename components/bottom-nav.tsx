@@ -1,7 +1,7 @@
 'use client'
 
 import { cn } from '@/lib/utils'
-import { Home, PlaySquare } from 'lucide-react'
+import { Home, LayoutGrid, PlaySquare } from 'lucide-react'
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'
 import { useEffect, useState } from 'react'
@@ -40,22 +40,29 @@ export function BottomNav() {
       name: '홈',
       href: '/',
       icon: Home,
-      active: pathname === '/' || pathname.startsWith('/campaigns'),
+      active: pathname === '/', 
+    },
+    {
+      name: '캠페인',
+      href: '/campaigns',
+      icon: LayoutGrid,
+      active: pathname.startsWith('/campaigns') && !pathname.includes('/campaigns/'),
     },
     {
       name: '숏츠',
       href: '/shorts',
       icon: PlaySquare,
-      active: pathname.startsWith('/shorts'),
+      active: pathname.startsWith('/shorts') && !pathname.includes('/shorts/'),
     },
   ]
 
-  // 특정 페이지(상세, 신청 등)에서는 탭바를 숨김 (아예 렌더링 안 함)
-  if (pathname.includes('/campaigns/')) {
-    return null;
-  }
+  // 상세 페이지에서는 탭바를 숨김 (여기서 리턴 null 처리)
+  // 단, 캠페인 리스트(/campaigns)와 숏츠 리스트(/shorts)에서는 보여야 함.
+  // 상세(/campaigns/[id], /shorts/[id])에서 숨김
+  const isDetailPage = (pathname.startsWith('/campaigns/') && pathname.split('/').length > 2) || 
+                       (pathname.startsWith('/shorts/') && pathname.split('/').length > 2);
 
-  if (pathname.includes('/shorts/')) {
+  if (isDetailPage) {
     return null;
   }
 
