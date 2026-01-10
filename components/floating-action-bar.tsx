@@ -81,13 +81,13 @@ export default function FloatingActionBar({ campaignId, status, startDate }: Pro
             
             <div className="pointer-events-auto flex items-stretch gap-3">
                 {/* 🆕 좋아요 버튼 추가 */}
-                <div className="w-[52px] h-[52px] shrink-0 flex items-center justify-center bg-white/80 backdrop-blur-md rounded-xl border border-white/40 shadow-lg">
+                <div className="w-[52px] h-[52px] shrink-0 flex items-center justify-center bg-white/80 backdrop-blur-md rounded-lg border border-white/40 shadow-lg">
                     <LikeButton campaignId={campaignId} iconSize={26} variant="default" />
                 </div>
 
                 {/* 신청 버튼 */}
                 <Button 
-                    className={`flex-1 h-[52px] text-lg font-bold rounded-xl shadow-2xl backdrop-blur-md border border-white/20 text-white transition-all active:scale-[0.98]
+                    className={`flex-1 h-[52px] text-lg font-bold rounded-lg shadow-2xl backdrop-blur-md border border-white/20 text-white transition-all active:scale-[0.98]
                         ${isDisabled ? 'bg-slate-400 cursor-not-allowed' : 'bg-black/85 hover:bg-black/90 border-glow'}
                     `}
                     onClick={handleButtonClick}

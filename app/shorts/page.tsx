@@ -73,7 +73,7 @@ function VideoItem({ video }: { video: Video }) {
   return (
     <Link 
       href={`/shorts/${video.id}`} 
-      className="relative flex flex-col w-full rounded-xl overflow-hidden shadow-sm hover:shadow-md transition-all group bg-slate-200"
+      className="relative flex flex-col w-full rounded-lg overflow-hidden shadow-sm hover:shadow-md transition-all group bg-slate-200"
     >
       {/* 1. 배경 이미지 (부모 높이에 따라 자동으로 늘어남) */}
       <img 

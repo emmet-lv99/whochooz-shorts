@@ -229,7 +229,7 @@ export function ApplyForm ({campaignId}:{campaignId: string}) {
         <div className="pointer-events-auto">
           <Button 
             type="submit" 
-            className="border-glow w-full h-[52px] text-lg font-bold rounded-xl shadow-2xl bg-black/65 hover:bg-black/75 backdrop-blur-md border border-white/20 text-white" 
+            className="border-glow w-full h-[52px] text-lg font-bold rounded-lg shadow-2xl bg-black/65 hover:bg-black/75 backdrop-blur-md border border-white/20 text-white" 
             disabled={isSubmitting}
           >
             {isSubmitting ? '제출 중...' : '신청하기'}

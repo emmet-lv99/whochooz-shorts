@@ -47,7 +47,7 @@ export default async function Home() {
         {/* 4. 더보기 버튼 (하단) */}
         <div className="mt-8 mb-12">
             <Link href="/campaigns" className="block w-full">
-                <button className="w-full h-12 rounded-xl border border-slate-200 bg-white/50 text-slate-600 font-medium text-sm flex items-center justify-center gap-1 hover:bg-white/80 transition-colors active:scale-[0.98]">
+                <button className="w-full h-12 rounded-lg border border-slate-200 bg-white/50 text-slate-600 font-medium text-sm flex items-center justify-center gap-1 hover:bg-white/80 transition-colors active:scale-[0.98]">
                     더 많은 캠페인 보기
                     <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="lucide lucide-plus"><path d="M5 12h14"/><path d="M12 5v14"/></svg>
                 </button>

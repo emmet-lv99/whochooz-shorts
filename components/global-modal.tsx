@@ -53,7 +53,7 @@ export default function GlobalModal() {
         />
 
         {/* Modal Card */}
-        <div className={`relative w-full max-w-[320px] bg-white/90 backdrop-blur-xl border border-white/40 shadow-2xl rounded-2xl overflow-hidden transition-all duration-300 ${isOpen ? 'scale-100 opacity-100' : 'scale-95 opacity-0'}`}>
+        <div className={`relative w-full max-w-[320px] bg-white/90 backdrop-blur-xl border border-white/40 shadow-2xl rounded-lg overflow-hidden transition-all duration-300 ${isOpen ? 'scale-100 opacity-100' : 'scale-95 opacity-0'}`}>
             
             {/* Content */}
             <div className="p-6 text-center">

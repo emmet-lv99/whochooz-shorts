@@ -132,7 +132,7 @@ export default function ShortsPlayer({ video }: ShortsPlayerProps) {
                 {video.campaigns && (
                     <div onClick={(e) => e.stopPropagation()}>
                         <Link href={`/campaigns/${video.campaigns.id}`} className="block w-full">
-                            <div className="relative group overflow-hidden rounded-xl border border-white/40 bg-white/20 backdrop-blur-md shadow-[0_0_15px_rgba(255,255,255,0.3)] transition-all active:scale-[0.98]">
+                            <div className="relative group overflow-hidden rounded-lg border border-white/40 bg-white/20 backdrop-blur-md shadow-[0_0_15px_rgba(255,255,255,0.3)] transition-all active:scale-[0.98]">
                                 {/* 빛나는 효과 (Shimmer) */}
                                 <div className="absolute inset-0 translate-x-[-100%] animate-[shimmer_2s_infinite] bg-gradient-to-r from-transparent via-white/20 to-transparent" />
                                 

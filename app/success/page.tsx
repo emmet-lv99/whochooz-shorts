@@ -15,7 +15,7 @@ export default function SuccessPage() {
 
       {/* 2. 스크롤 가능한 컨텐츠 영역 */}
       <div className="relative z-10 flex flex-col items-center justify-center min-h-screen p-6">
-        <div className="w-full max-w-sm bg-white/40 backdrop-blur-xl border border-white/60 shadow-2xl rounded-3xl p-10 flex flex-col items-center text-center">
+        <div className="w-full max-w-sm bg-white/40 backdrop-blur-xl border border-white/60 shadow-2xl rounded-lg p-10 flex flex-col items-center text-center">
           
           {/* 체크 아이콘 (Glow Animation) */}
           <div className="mb-6 relative">
@@ -36,7 +36,7 @@ export default function SuccessPage() {
           
           <div className="w-full space-y-3">
             <Link href="/" className="block">
-              <Button className="w-full h-14 bg-slate-900/80 hover:bg-slate-900 text-white rounded-2xl font-bold text-lg shadow-lg hover:shadow-xl transition-all border border-white/10 backdrop-blur-md">
+              <Button className="w-full h-14 bg-slate-900/80 hover:bg-slate-900 text-white rounded-lg font-bold text-lg shadow-lg hover:shadow-xl transition-all border border-white/10 backdrop-blur-md">
                 홈으로 돌아가기
               </Button>
             </Link>

@@ -79,7 +79,7 @@ export default function MainCarousel() {
             {({ isActive }) => (
               <Link 
                 href={banner.link_url || '#'} 
-                className={`relative w-full aspect-[4/5] rounded-2xl overflow-hidden shadow-lg block ${!banner.link_url && 'pointer-events-none'}`}
+                className={`relative w-full aspect-[4/5] rounded-lg overflow-hidden shadow-lg block ${!banner.link_url && 'pointer-events-none'}`}
                 style={{ backgroundColor: banner.bg_color || '#000000' }}
               >
                 {/* 이미지 */}

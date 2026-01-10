@@ -29,7 +29,7 @@ export default function LoginPage() {
 
       {/* 2. 스크롤 가능한 컨텐츠 영역 */}
       <div className="relative z-10 flex flex-col items-center justify-center min-h-screen p-6">
-        <div className="w-full max-w-sm bg-white/40 backdrop-blur-xl border border-white/60 shadow-2xl rounded-3xl p-8 flex flex-col items-center text-center pb-10">
+        <div className="w-full max-w-sm bg-white/40 backdrop-blur-xl border border-white/60 shadow-2xl rounded-lg p-8 flex flex-col items-center text-center pb-10">
           <h1 className="text-2xl font-bold mb-3 text-slate-900 leading-tight">
             로그인하고<br/>
             <span className="text-indigo-600">더 많은 혜택</span>을 받아보세요!
