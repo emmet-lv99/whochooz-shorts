@@ -1,7 +1,7 @@
 'use client'
 
 import { cn } from '@/lib/utils'
-import { Home, LayoutGrid, PlaySquare } from 'lucide-react'
+import { Home, LayoutGrid, PlaySquare, User } from 'lucide-react'
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'
 import { useEffect, useState } from 'react'
@@ -46,13 +46,19 @@ export function BottomNav() {
       name: '캠페인',
       href: '/campaigns',
       icon: LayoutGrid,
-      active: pathname.startsWith('/campaigns') && !pathname.includes('/campaigns/'),
+      active: pathname.startsWith('/campaigns') && pathname.split('/').length <= 2,
     },
     {
       name: '숏츠',
       href: '/shorts',
       icon: PlaySquare,
-      active: pathname.startsWith('/shorts') && !pathname.includes('/shorts/'),
+      active: pathname.startsWith('/shorts') && pathname.split('/').length <= 2,
+    },
+    {
+      name: 'MY',
+      href: '/mypage',
+      icon: User,
+      active: pathname.startsWith('/mypage'),
     },
   ]
 

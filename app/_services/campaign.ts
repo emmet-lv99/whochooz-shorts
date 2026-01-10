@@ -141,5 +141,30 @@ export const campaignService = {
       console.log(e)
       return {error: e} // 실패
     }  
+  },
+
+  // 내 신청 내역 조회
+  async getMyApplications(userId: string) {
+    const { data, error } = await supabase
+      .from('applications')
+      .select(`
+        *,
+        campaigns (
+          id,
+          title,
+          brand,
+          thumbnail_url,
+          status,
+          end_date
+        )
+      `)
+      .eq('user_id', userId)
+      .order('created_at', { ascending: false });
+
+    if (error) {
+      console.error('Error fetching my applications:', error);
+      return [];
+    }
+    return data;
   }
 }

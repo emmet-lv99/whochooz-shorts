@@ -5,7 +5,6 @@ import { Link as LinkIcon } from "lucide-react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useEffect, useState } from "react"; // useState, useEffect 추가
-import AuthButtons from "./auth-buttons";
 
 export default function CommonHeader() {
   const pathname = usePathname();
@@ -37,9 +36,7 @@ export default function CommonHeader() {
             <LinkIcon className="w-6 h-6 text-slate-900" />
             <span className="font-bold text-lg text-slate-900">WhoChooz</span>
         </Link>
-        <div className="flex gap-2">
-            <AuthButtons />
-        </div>
+
     </header>
   );
 }
