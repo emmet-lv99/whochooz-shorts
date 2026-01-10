@@ -3,11 +3,12 @@ export interface Video {
     id: string;
     video_url: string;
     thumbnail_url: string;
-    title: string;
+    description: string;
     campaign_id: string;
     campaigns?: { // JOIN된 데이터 (옵셔널)
         title: string;
         brand: string;
+        hashtags: string;
     }
 }
 export interface VideoDetail extends Video {
@@ -15,6 +16,7 @@ export interface VideoDetail extends Video {
         id: string;
         title: string;
         brand: string;
+        hashtags: string;
     }
 }
 
@@ -24,7 +26,7 @@ export const videoService = {
         try {
             const { data, error } = await supabase
                 .from('videos')
-                .select('*')
+                .select('*, campaigns(title, brand, hashtags)')
                 .order('created_at', { ascending: false });
 
             if (error) throw error;
@@ -43,7 +45,7 @@ export const videoService = {
                 .select(`
                     *,
                     campaigns (
-                        id, title, brand
+                        id, title, brand, hashtags
                     )
                 `)
                 .eq('id', id)
