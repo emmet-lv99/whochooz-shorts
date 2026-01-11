@@ -21,13 +21,17 @@ export interface VideoDetail extends Video {
 }
 
 export const videoService = {
-    // 1. 전체 리스트 가져오기
-    async getAllList() {
+    // 1. 전체 리스트 가져오기 (페이지네이션 지원)
+    async getAllList(page = 1, limit = 10) {
         try {
+            const from = (page - 1) * limit;
+            const to = from + limit - 1;
+
             const { data, error } = await supabase
                 .from('videos')
                 .select('*, campaigns(title, brand, hashtags)')
-                .order('created_at', { ascending: false });
+                .order('created_at', { ascending: false })
+                .range(from, to);
 
             if (error) throw error;
             return data as Video[];
