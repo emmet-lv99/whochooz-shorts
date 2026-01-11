@@ -30,7 +30,7 @@ export interface Campaign {
 
 // 2. 서비스 로직 구현 (데이터 접근 함수들)
 export const campaignService = {
-  // 메인 홈: 최신순 4개만 가져오기 (쇼윈도용)
+  // 메인 홈: 최신순 4개만 가져오기 (쇼윈도용 - 이제 안 쓸 수도 있음)
   async getLatestList() {
     const {data, error} = await supabase
       .from('campaigns')
@@ -45,11 +45,8 @@ export const campaignService = {
     return data as Campaign[];
   },
 
-  // 캠페인 리스트: 전체 가져오기
-  // status 파라미터:
-  // - 'open': 모집중 + 모집예정 (status != 'closed' AND end_date >= now)
-  // - 'closed': 마감 (status = 'closed' OR end_date < now)
-  async getAllList(status?: 'open' | 'closed') {
+  // 캠페인 리스트: 전체 가져오기 (페이지네이션 지원)
+  async getAllList(status?: 'open' | 'closed', page = 1, limit = 10) {
     const now = new Date().toISOString();
     
     // 1. 기본 쿼리 생성
@@ -57,42 +54,42 @@ export const campaignService = {
       .from('campaigns')
       .select('*');
     
-    // 2. 상태 필터 적용 (프론트엔드 로직과 동일)
+    // 2. 상태 필터 적용
     if (status === 'open') {
-      // 모집중 + 모집예정: status가 closed가 아니고, end_date가 현재보다 크거나 같은 것
+      // 모집중 + 모집예정
       query = query
         .neq('status', 'closed')
         .gte('end_date', now);
     } else if (status === 'closed') {
-      // 마감: status가 closed이거나, end_date가 현재보다 작은 것
-      // Supabase .or() 사용
+      // 마감
       query = query.or(`status.eq.closed,end_date.lt.${now}`);
     }
     
-    // 3. 정렬: 모집중은 마감 임박순, 마감은 최근 마감순
+    // 3. 정렬
     if (status === 'closed') {
       query = query.order('end_date', { ascending: false });
     } else {
       query = query.order('end_date', { ascending: true }); // 마감 임박순
     }
+
+    // 4. 페이지네이션 적용 (Supabase range는 0-index)
+    const from = (page - 1) * limit;
+    const to = from + limit - 1;
+    query = query.range(from, to);
     
-    // 4. 쿼리 실행
+    // 5. 쿼리 실행
     const {data, error} = await query;
     
-    // 5. 에러 처리
     if (error) {
       console.error('Error fetching all campaigns:', error);
       return [];
     }
     
-    // 6. 결과 반환
-    console.log(data);
     return data as Campaign[];
   },
 
   // 상세 페이지: ID로 하나만 조회
   async getDetail(id: string) {
-    // 상세 조회 시에는 연관된 videos 정보도 같이 가져올 수 있음 ( 여기선 일단 기본 정보만)
     const {data, error} = await supabase
       .from('campaigns')
       .select('*')
@@ -112,7 +109,7 @@ export const campaignService = {
       // 1. 신청 내역 저장
       const {error: insertError} = await supabase.from('applications').insert({
         campaign_id: campaignId,
-        user_id: user.id, // 진짜 유저 ID 사용!
+        user_id: user.id,
         name: data.name,
         phone: data.phone,
         sns_url: data.sns_url,
@@ -126,20 +123,17 @@ export const campaignService = {
       
       if(insertError) throw insertError;
 
-      // 2. 캠페인 신청자 수 증가 (+1) - RPC 사용 권장
-      // (DB Function: create or replace function increment_apply_count(row_id uuid) ...)
+      // 2. 캠페인 신청자 수 증가 (+1)
       const { error: updateError } = await supabase.rpc('increment_apply_count', { campaign_id: campaignId });
       
       if (updateError) {
-          // RPC가 없거나 실패해도 신청 자체는 성공으로 처리 (단, 로깅)
           console.warn('Failed to increment apply count. Maybe RPC missing?', updateError);
-          // Fallback: RPC 없을 경우 수동 업데이트 시도하지 않음 (복잡도 증가 방지)
       }
 
-      return {error: null} // 성공
+      return {error: null}
     } catch(e) {
       console.log(e)
-      return {error: e} // 실패
+      return {error: e}
     }  
   },
 
