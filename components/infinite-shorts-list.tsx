@@ -16,12 +16,10 @@ interface Props {
   initialCampaigns: Campaign[]
 }
 
-// 아이템 섞기 함수 (비디오 리스트에 캠페인 랜덤 삽입)
 function mixItems(videos: Video[], campaigns: Campaign[]): MixedItem[] {
     const items: MixedItem[] = videos.map(v => ({ type: 'video', data: v }));
     
     if (campaigns.length > 0 && videos.length > 0) {
-        // 캠페인을 랜덤한 위치에 삽입
         campaigns.forEach(c => {
              if (items.length === 0) {
                  items.push({ type: 'campaign', data: c });
@@ -33,7 +31,6 @@ function mixItems(videos: Video[], campaigns: Campaign[]): MixedItem[] {
     } else if (videos.length === 0 && campaigns.length > 0) {
         return campaigns.map(c => ({ type: 'campaign', data: c }));
     }
-
     return items;
 }
 
@@ -62,7 +59,7 @@ export default function InfiniteShortsList({ initialVideos, initialCampaigns }: 
           loadMore()
         }
       },
-      { threshold: 0.1 } 
+      { threshold: 0, rootMargin: '200px' } // 미리 로딩
     )
 
     observer.observe(element)
@@ -77,22 +74,24 @@ export default function InfiniteShortsList({ initialVideos, initialCampaigns }: 
     setLoading(true)
     
     try {
-      // 비디오 10개, 캠페인 2개 가져오기 (비율 5:1 유지)
       const [nextVideos, nextCampaigns] = await Promise.all([
          videoService.getAllList(page, 10),
          campaignService.getAllList('open', page, 2)
       ]);
       
       if (nextVideos.length === 0) {
-        setHasMore(false) // 비디오가 없으면 더 이상 로드 중단 (캠페인만 남았어도 중단)
+        setHasMore(false)
       } else {
         const newMixed = mixItems(nextVideos, nextCampaigns);
         
-        // 중복 제거 (ID 기준)
         setItems(prev => {
             const existingIds = new Set(prev.map(i => i.data.id));
             const filteredNew = newMixed.filter(i => !existingIds.has(i.data.id));
-            if (filteredNew.length === 0) return prev;
+            if (filteredNew.length === 0) {
+               // 중복만 있으면 더 이상 로드 안 함 (무한 루프 방지)
+               setHasMore(false);
+               return prev;
+            }
             return [...prev, ...filteredNew];
         })
 
@@ -106,15 +105,13 @@ export default function InfiniteShortsList({ initialVideos, initialCampaigns }: 
     }
   }
 
-  // Masonry Layout을 위한 2열 분리
   const leftItems = items.filter((_, i) => i % 2 === 0);
   const rightItems = items.filter((_, i) => i % 2 !== 0);
 
   return (
     <>
-       {/* Staggered Grid (Masonry-like) */}
        <div className="flex gap-3 px-4 py-4 min-h-screen items-start">
-          {/* 왼쪽 컬럼 */}
+          {/* 왼쪽 */}
           <div className="flex flex-col gap-3 flex-1">
              {leftItems.map((item) => (
                 item.type === 'video' 
@@ -123,7 +120,7 @@ export default function InfiniteShortsList({ initialVideos, initialCampaigns }: 
              ))}
           </div>
 
-          {/* 오른쪽 컬럼 */}
+          {/* 오른쪽 */}
           <div className="flex flex-col gap-3 flex-1">
              {rightItems.map((item) => (
                 item.type === 'video' 
@@ -133,9 +130,8 @@ export default function InfiniteShortsList({ initialVideos, initialCampaigns }: 
           </div>
        </div>
 
-      {/* 로딩 Trigger */}
       {hasMore && (
-        <div ref={observerRef} className="py-8 flex justify-center w-full">
+        <div ref={observerRef} className="py-6 flex justify-center w-full min-h-[60px] items-center">
             {loading ? (
                 <Loader2 className="animate-spin text-slate-400 w-6 h-6" />
             ) : (

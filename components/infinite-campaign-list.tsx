@@ -34,7 +34,8 @@ export default function InfiniteCampaignList({ initialCampaigns, status = 'open'
           loadMore()
         }
       },
-      { threshold: 0.1 } 
+      // rootMargin: '200px' -> 스크롤 바닥 닿기 200px 전 미리 로딩
+      { threshold: 0, rootMargin: '200px' } 
     )
 
     observer.observe(element)
@@ -42,33 +43,34 @@ export default function InfiniteCampaignList({ initialCampaigns, status = 'open'
     return () => {
         if (element) observer.unobserve(element)
     }
-  }, [hasMore, loading, page]) // page가 바뀌면 observer 재등록 (closure 문제 방지)
+  }, [hasMore, loading, page]) 
 
   const loadMore = async () => {
     if (loading) return
     setLoading(true)
     
     try {
-      // 0.5초 딜레이 (UI 확인용, 너무 빠르면 깜빡임)
-    //   await new Promise(res => setTimeout(res, 500))
-
+      // API 호출 (다음 페이지)
       const nextBatch = await campaignService.getAllList(status, page, 10)
       
       if (nextBatch.length === 0) {
         setHasMore(false)
       } else {
-        // 중복 제거 (혹시 모를 페이징 밀림 방지)
+        // 중복 제거 및 추가
         setCampaigns(prev => {
             const newItems = nextBatch.filter(item => !prev.some(p => p.id === item.id))
             if (newItems.length === 0) {
-                setHasMore(false)
+                // 가져왔는데 다 중복이면 -> 사실상 끝? 아니면 다음 페이지 시도?
+                // 여기서는 끝난 것으로 간주하거나 page만 올릴 수도 있음.
+                // 일단 중복이 많으면 hasMore false 처리하는게 안전.
+                setHasMore(false) 
                 return prev
             }
             return [...prev, ...newItems]
         })
 
         setPage(prev => prev + 1)
-        if (nextBatch.length < 10) setHasMore(false) // 가져온 게 10개 미만이면 끝
+        if (nextBatch.length < 10) setHasMore(false) 
       }
     } catch (e) {
       console.error(e)
@@ -85,12 +87,12 @@ export default function InfiniteCampaignList({ initialCampaigns, status = 'open'
         ))}
       </div>
 
-      {/* 로딩 Trigger Area */}
       {hasMore && (
-        <div ref={observerRef} className="py-8 flex justify-center w-full">
+        <div ref={observerRef} className="py-6 flex justify-center w-full min-h-[60px] items-center">
             {loading ? (
                 <Loader2 className="animate-spin text-slate-400 w-6 h-6" />
             ) : (
+                // 투명한 트리거 영역 (높이 확보)
                 <div className="h-4 w-full" /> 
             )}
         </div>
