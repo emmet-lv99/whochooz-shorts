@@ -1,60 +1,29 @@
-import CampaignCard from "@/components/campaign-card";
-import { cn } from "@/lib/utils";
+import { campaignService } from "@/app/_services/campaign";
+import InfiniteCampaignList from "@/components/infinite-campaign-list";
+import { ChevronLeft } from 'lucide-react';
 import Link from "next/link";
-import { campaignService } from "../_services/campaign";
 
-interface Props {
-    searchParams: {
-        status?: 'open' | 'closed';
-    };
-}    
+// 30초마다 캐싱 갱신
+export const revalidate = 30;
 
-import CampaignHeader from "@/components/campaign-header"; // Import 추가
+export default async function CampaignListPage() {
+  // 초기 데이터 10개 가져오기
+  const initialCampaigns = await campaignService.getAllList('open', 1, 10);
 
-export default async function CampaignsPage({ searchParams }: Props) {
-    const currentStatus = searchParams.status || 'open';
-    const campaigns = await campaignService.getAllList(currentStatus); 
+  return (
+    <main className="pb-24 min-h-screen bg-slate-50">
+      {/* 헤더 */}
+      <div className="fixed top-0 inset-x-0 h-14 bg-white/80 backdrop-blur-xl z-50 flex items-center px-4 border-b border-slate-200/50">
+         <Link href="/" className="p-2 -ml-2 text-slate-900 hover:bg-slate-100 rounded-full transition-colors">
+             <ChevronLeft size={24} />
+         </Link>
+         <h1 className="text-lg font-bold ml-1 text-slate-900">전체 캠페인</h1>
+      </div>
 
-    return (
-        <main className="pb-20 min-h-screen">
-            {/* 1. 헤더 */}
-            <CampaignHeader />
-
-            {/* 2. 탭 */}
-            <div className="flex items-center gap-2 px-4 pt-6 pb-3">
-                <Link href="/campaigns?status=open" 
-                    className={cn(
-                        "px-3 py-1.5 text-sm font-medium rounded-md transition-colors",
-                        currentStatus === 'open' 
-                            ? "bg-slate-900 text-white" 
-                            : "text-slate-400 hover:text-slate-600"
-                    )}>
-                    모집중
-                </Link>
-                <Link href="/campaigns?status=closed"
-                    className={cn(
-                        "px-3 py-1.5 text-sm font-medium rounded-md transition-colors",
-                        currentStatus === 'closed' 
-                            ? "bg-slate-900 text-white" 
-                            : "text-slate-400 hover:text-slate-600"
-                    )}>
-                    마감됨
-                </Link>
-            </div>
-
-            {/* 3. 리스트 (2열 그리드) */}
-            <div className="px-4 py-4 grid grid-cols-2 gap-x-3 gap-y-8">
-                {campaigns.map((campaign) => (
-                    <CampaignCard key={campaign.id} campaign={campaign} />
-                ))}
-            </div>
-
-            {/* 데이터 없을 때 */}
-            {campaigns.length === 0 && (
-                <div className="py-20 text-center text-slate-400 text-sm">
-                    해당하는 캠페인이 없습니다.
-                </div>
-            )}
-        </main>
-    )
+      {/* 리스트 영역 */}
+      <div className="pt-20 px-4">
+         <InfiniteCampaignList initialCampaigns={initialCampaigns} status="open" />
+      </div>
+    </main>
+  )
 }
