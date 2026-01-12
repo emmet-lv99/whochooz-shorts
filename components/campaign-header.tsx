@@ -17,20 +17,18 @@ export default function CampaignHeader() {
     }, []);
 
     return (
-        <header 
+        <div 
             className={cn(
-                "sticky top-0 z-[99] flex items-center h-14 px-4 transition-all duration-300",
+                "sticky top-0 h-14 z-50 flex items-center px-4 transition-all duration-300",
                 isScrolled 
                     ? "bg-white/70 backdrop-blur-md border-b border-white/20" 
                     : "bg-transparent border-b border-transparent"
             )}
         >
-            <Link href="/" className="mr-4">
-                <ChevronLeft className="w-6 h-6 text-slate-900" />
-            </Link>
-            <h1 className="text-lg font-bold text-slate-900">
-                모든 캠페인
-            </h1>
-        </header>
+             <Link href="/" className="p-2 -ml-2 text-slate-900 hover:bg-slate-100 rounded-full transition-colors">
+                 <ChevronLeft size={24} />
+             </Link>
+             <h1 className="text-lg font-bold ml-1 text-slate-900">전체 캠페인</h1>
+        </div>
     );
 }
