@@ -32,7 +32,7 @@ export default async function ApplyPage({ params }: Props) {
         </div>
 
         {/* 입력 폼 (Client Component) */}
-        <ApplyForm campaignId={campaign.id} />
+        <ApplyForm campaignId={campaign.id} campaignType={campaign.type} />
       </main>
     )
 }

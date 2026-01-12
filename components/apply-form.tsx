@@ -1,9 +1,12 @@
 'use client'
 
 import { campaignService } from "@/app/_services/campaign";
+import { userService } from "@/app/_services/user";
 import { useAuthStore } from "@/app/_store/useAuthStore";
 import { useModalStore } from "@/app/_store/useModalStore";
 import { useRouter } from "next/navigation";
+import { useEffect } from "react";
+import { useDaumPostcodePopup } from 'react-daum-postcode';
 import { Controller, useForm } from "react-hook-form";
 import { Button } from "./ui/button";
 import { Checkbox } from './ui/checkbox';
@@ -16,6 +19,9 @@ import { Textarea } from "./ui/textarea";
 export interface ApplyFormValues {
     name: string;
     phone: string;
+    zipcode?: string;
+    address?: string;
+    detailed_address?: string;
     sns_url: string;
     content: string;
     is_agreed_all: boolean;
@@ -26,14 +32,19 @@ export interface ApplyFormValues {
 }
 
 
-export function ApplyForm ({campaignId}:{campaignId: string}) {
+interface Props {
+  campaignId: string
+  campaignType: 'visit' | 'delivery'
+}
+
+export function ApplyForm ({campaignId, campaignType}: Props) {
   
   const router = useRouter();
   const { open } = useModalStore();
   const { user } = useAuthStore(); // Global Auth State
 
   // 2. 폼 훅 초기화
-  const {register, handleSubmit, control, formState: {errors, isSubmitting}} = useForm<ApplyFormValues>({
+  const {register, handleSubmit, control, setValue, watch, formState: {errors, isSubmitting}} = useForm<ApplyFormValues>({
     defaultValues: {
       is_agreed_penalty: false,
       is_agreed_privacy: false,
@@ -41,6 +52,53 @@ export function ApplyForm ({campaignId}:{campaignId: string}) {
       is_agreed_marketing: false
     }
   });  
+
+  // 프로필 정보 불러오기 (이름, 연락처, 주소 등)
+  useEffect(() => {
+    if (user) {
+        userService.getProfile(user.id).then((profile) => {
+            console.log("ApplyForm: Fetched profile", profile); // 디버깅용 로그
+            if (profile) {
+                // 이름, 연락처 자동 입력
+                if(profile.name) setValue('name', profile.name);
+                if(profile.phone) setValue('phone', profile.phone);
+
+                // 배송지의 경우 주소도 입력
+                if(profile.zipcode) setValue('zipcode', profile.zipcode);
+                if(profile.address) setValue('address', profile.address);
+                if(profile.detailed_address) setValue('detailed_address', profile.detailed_address);
+            }
+        });
+    } else {
+        console.log("ApplyForm: No user yet");
+    }
+  }, [user, setValue]);
+
+  // 다음 주소 찾기 훅
+  const openPostcode = useDaumPostcodePopup();
+
+  const handleComplete = (data: any) => {
+    let fullAddress = data.address;
+    let extraAddress = '';
+
+    if (data.addressType === 'R') {
+      if (data.bname !== '') {
+        extraAddress += data.bname;
+      }
+      if (data.buildingName !== '') {
+        extraAddress += (extraAddress !== '' ? `, ${data.buildingName}` : data.buildingName);
+      }
+      fullAddress += (extraAddress !== '' ? ` (${extraAddress})` : '');
+    }
+
+    setValue('zipcode', data.zonecode);
+    setValue('address', fullAddress);
+    // 상세주소 포커스 등 UX 처리 가능
+  };
+
+  const handleClick = () => {
+    openPostcode({ onComplete: handleComplete });
+  };
 
   // 3. 제출 핸들러
   const onSubmit = async (data: ApplyFormValues) => {
@@ -53,6 +111,16 @@ export function ApplyForm ({campaignId}:{campaignId: string}) {
         onConfirm: () => router.push("/login")
       });
       return;
+    }
+
+    // 주소 합치기 (배송형일 경우)
+    // DB에 주소 필드가 하나라면 합쳐서 보내거나 별도 컬럼으로 보내거나.
+    // 여기서는 service단에서 처리하도록 그대로 넘김.
+    if (campaignType === 'delivery') {
+         if(!data.address || !data.detailed_address) {
+             // 혹시 모를 validation (useForm required로 잡히겠지만)
+             return;
+         }
     }
 
     // DB 저장
@@ -100,6 +168,37 @@ export function ApplyForm ({campaignId}:{campaignId: string}) {
           />
           {errors.phone && <p className="text-red-500 text-xs">{errors.phone.message}</p>} 
         </div>
+
+        {/* 배송지 (배송형일 경우만 노출) */}
+        {campaignType === 'delivery' && (
+            <div className="space-y-3 pt-2">
+                <Label className="text-sm font-medium text-slate-700">배송지 정보</Label>
+                <div className="flex gap-2">
+                    <Input 
+                        placeholder="우편번호" 
+                        readOnly 
+                        className="bg-slate-50"
+                        {...register('zipcode', {required: '주소를 검색해주세요'})}
+                    />
+                    <Button type="button" onClick={handleClick} variant="outline" className="whitespace-nowrap">
+                        주소 검색
+                    </Button>
+                </div>
+                <Input 
+                    placeholder="기본 주소" 
+                    readOnly 
+                    className="bg-slate-50"
+                    {...register('address', {required: '주소를 검색해주세요'})}
+                />
+                <Input 
+                    placeholder="상세 주소를 입력해주세요" 
+                    {...register('detailed_address', {required: '상세 주소를 입력해주세요'})}
+                />
+                 {(errors.zipcode || errors.address || errors.detailed_address) && (
+                    <p className="text-red-500 text-xs">배송지 정보를 모두 입력해주세요.</p>
+                 )}
+            </div>
+        )}
 
         {/* SNS 주소 */}
         <div className="space-y-2">

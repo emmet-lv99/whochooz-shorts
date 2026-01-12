@@ -2,6 +2,7 @@
 import { ApplyFormValues } from "@/components/apply-form";
 import { supabase } from "@/lib/supabase";
 import { User } from "@supabase/supabase-js";
+import { userService } from "./user";
 
 // 1. 필요한 데이터 타입 정의 (DB 컬럼과 일치)
 export interface Campaign {
@@ -112,6 +113,9 @@ export const campaignService = {
         user_id: user.id,
         name: data.name,
         phone: data.phone,
+        zipcode: data.zipcode || null,
+        shipping_addr: data.address || null,   // DB 컬럼: shipping_addr
+        detailed_address: data.detailed_address || null, // DB 컬럼: detailed_address
         sns_url: data.sns_url,
         content: data.content,
         is_agreed_penalty: data.is_agreed_penalty,
@@ -121,7 +125,10 @@ export const campaignService = {
         status: 'pending',
       });
       
-      if(insertError) throw insertError;
+      if(insertError) {
+        console.error('Insert Application Error:', insertError);
+        throw insertError;
+      }
 
       // 2. 캠페인 신청자 수 증가 (+1)
       const { error: updateError } = await supabase.rpc('increment_apply_count', { campaign_id: campaignId });
@@ -130,9 +137,20 @@ export const campaignService = {
           console.warn('Failed to increment apply count. Maybe RPC missing?', updateError);
       }
 
+      // 3. 유저 프로필 업데이트 (이름, 연락처, 주소 최신화)
+      // 입력된 정보로 프로필을 업데이트합니다.
+      await userService.updateProfile(user.id, { 
+          name: data.name,
+          phone: data.phone,
+          // 주소 정보가 있는 경우(배송형 등) 함께 업데이트
+          zipcode: data.zipcode, 
+          address: data.address,
+          detailed_address: data.detailed_address
+      });
+
       return {error: null}
     } catch(e) {
-      console.log(e)
+      console.error('Apply Campaign Error:', e)
       return {error: e}
     }  
   },
