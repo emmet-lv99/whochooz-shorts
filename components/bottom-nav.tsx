@@ -65,10 +65,12 @@ export function BottomNav() {
   // 상세 페이지에서는 탭바를 숨김 (여기서 리턴 null 처리)
   // 단, 캠페인 리스트(/campaigns)와 숏츠 리스트(/shorts)에서는 보여야 함.
   // 상세(/campaigns/[id], /shorts/[id])에서 숨김
-  const isDetailPage = (pathname.startsWith('/campaigns/') && pathname.split('/').length > 2) || 
+  // VIP 랜딩 페이지(/vip)에서도 숨김
+  const isDetailPage = (pathname.startsWith('/campaigns/') && pathname.split('/').length > 2) ||
                        (pathname.startsWith('/shorts/') && pathname.split('/').length > 2);
+  const isVipPage = pathname.startsWith('/vip');
 
-  if (isDetailPage) {
+  if (isDetailPage || isVipPage) {
     return null;
   }
 
