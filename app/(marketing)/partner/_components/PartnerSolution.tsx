@@ -64,11 +64,40 @@ export default function PartnerSolution() {
              {/* Phone Notch */}
              <div className="absolute top-0 left-1/2 -translate-x-1/2 w-32 h-6 bg-black rounded-b-xl z-20" />
              
-             {/* Screen UI Mockup */}
-             <div className="w-full h-full p-6 flex flex-col pt-16 space-y-4 opacity-80">
-                <div className="w-full h-32 rounded-2xl bg-white/5 animate-pulse" />
-                <div className="w-full h-20 rounded-2xl bg-white/5 animate-pulse delay-75" />
-                <div className="w-full h-20 rounded-2xl bg-white/5 animate-pulse delay-150" />
+             {/* Screen UI Mockup (Live Iframe) */}
+             <div className="w-full h-full relative">
+               <iframe 
+                 src="https://whochooz-shorts.vercel.app/" 
+                 className="w-full h-full border-0 object-cover"
+                 title="WhoChooz Live Preview"
+                 loading="lazy"
+                 style={{ 
+                   filter: 'blur(4px) grayscale(30%)',
+                   pointerEvents: 'none',
+                   userSelect: 'none'
+                 }} 
+               />
+               
+               {/* Overlay */}
+               <div className="absolute inset-0 bg-black/40 backdrop-blur-[2px] z-10 flex flex-col items-center justify-center text-center p-6">
+                 
+                 {/* Icon: Lock with Lime Glow */}
+                 <div className="w-12 h-12 rounded-full bg-[#C6F920]/10 flex items-center justify-center mb-4 border border-[#C6F920]/30 shadow-[0_0_20px_rgba(198,249,32,0.2)]">
+                   <svg className="w-5 h-5 text-[#C6F920]" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
+                   </svg>
+                 </div>
+                 
+                 <h3 className="text-white font-bold text-lg mb-1 tracking-tight">
+                   Grand Open<br/>
+                   <span className="text-[#C6F920]">2026. 02</span>
+                 </h3>
+                 
+                 <p className="text-white/60 text-[10px] font-light leading-relaxed mt-2 border-t border-white/10 pt-2 w-full max-w-[140px]">
+                   현재 최종 튜닝 중입니다.<br/>
+                   파트너에게 먼저 공개됩니다.
+                 </p>
+               </div>
              </div>
 
              {/* Reflective Shine */}
