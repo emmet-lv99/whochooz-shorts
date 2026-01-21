@@ -134,7 +134,7 @@ function VIPPageContent() {
 
   // 유효한 코드 - 입력 폼 표시
   return (
-    <div className="flex-1 flex items-center justify-center px-6 py-12">
+    <div className="flex-1 flex items-center justify-center px-6 py-12 break-keep">
       <div className="w-full max-w-md">
         {/* 헤더 */}
         <div className="text-center mb-10">

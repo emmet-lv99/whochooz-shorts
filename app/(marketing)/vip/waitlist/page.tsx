@@ -85,7 +85,7 @@ function WaitlistContent() {
   };
 
   return (
-    <div className="min-h-screen flex flex-col items-center justify-center px-6 text-center animate-fade-in relative overflow-hidden">
+    <div className="min-h-screen flex flex-col items-center justify-center px-6 text-center animate-fade-in relative overflow-hidden break-keep">
       
       {/* Background Effect - Aurora with Dark Overlay */}
       <div className="vip-background saturate-50" />
