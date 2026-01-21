@@ -50,19 +50,19 @@ export default function PartnerHero({ onScrollToCTA }: { onScrollToCTA: () => vo
         whileHover={{ scale: 1.05 }}
         whileTap={{ scale: 0.95 }}
         onClick={onScrollToCTA}
-        className="px-8 py-4 rounded-full bg-[#C6F920] text-black font-bold text-lg shadow-[0_0_20px_rgba(198,249,32,0.4)] animate-pulse-slow partner-button-hero"
+        className="px-10 py-5 rounded-full bg-[#C6F920] text-black font-bold text-xl shadow-[0_0_30px_rgba(198,249,32,0.5)] hover:shadow-[0_0_50px_rgba(198,249,32,0.8)] transition-shadow duration-300 animate-pulse-slow partner-button-hero"
       >
         파트너 등록하기
       </motion.button>
 
-      {/* Custom CSS for slow pulse if needed, or use tailwind animate-pulse */}
+      {/* Custom CSS for breathing glow */}
       <style jsx>{`
+        @keyframes breathing {
+          0%, 100% { box-shadow: 0 0 30px rgba(198,249,32,0.5); transform: scale(1); }
+          50% { box-shadow: 0 0 50px rgba(198,249,32,0.7); transform: scale(1.02); }
+        }
         .partner-button-hero {
           animation: breathing 3s infinite ease-in-out;
-        }
-        @keyframes breathing {
-          0%, 100% { box-shadow: 0 0 20px rgba(198,249,32,0.4); }
-          50% { box-shadow: 0 0 40px rgba(198,249,32,0.6); }
         }
       `}</style>
     </section>

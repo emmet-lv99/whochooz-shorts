@@ -36,8 +36,8 @@ export default function PartnerProcess() {
           <h2 className="text-3xl md:text-5xl font-bold">이렇게 쉬워도 되나요?</h2>
         </motion.div>
 
-        {/* Desktop: Grid / Mobile: Vertical or Scroll (Let's stick to Grid for simplicity first, responsive flex) */}
-        <div className="flex flex-col md:flex-row gap-8 justify-center items-stretch">
+        {/* Desktop: Grid / Mobile: Horizontal Scroll (Snap) */}
+        <div className="flex flex-row overflow-x-auto md:overflow-visible gap-4 md:gap-8 snap-x snap-mandatory px-6 md:px-0 -mx-6 md:mx-0 py-4 no-scrollbar">
           {steps.map((item, idx) => (
             <motion.div
               key={idx}
@@ -45,7 +45,7 @@ export default function PartnerProcess() {
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
               transition={{ delay: idx * 0.2 }}
-              className="flex-1 bg-white/5 border border-white/10 rounded-3xl p-8 relative overflow-hidden group hover:bg-white/10 transition-colors"
+              className="flex-shrink-0 w-[85vw] md:w-auto md:flex-1 snap-center bg-white/5 border border-white/10 rounded-3xl p-8 relative overflow-hidden group hover:bg-white/10 transition-colors"
             >
                <span className="absolute top-6 right-6 text-6xl font-black text-white/5 select-none font-serif-display group-hover:text-white/10 transition-colors">{item.step}</span>
                
@@ -54,7 +54,7 @@ export default function PartnerProcess() {
                <h3 className="text-2xl font-bold mb-4 whitespace-pre-line leading-snug">{item.title}</h3>
                <p className="text-white/50 text-sm whitespace-pre-line leading-relaxed">{item.desc}</p>
 
-               {/* Arrow for connection (except last) */}
+               {/* Arrow for connection (Desktop only) */}
                {idx < 2 && (
                  <div className="hidden md:block absolute top-1/2 -right-6 transform -translate-y-1/2 z-10 text-white/20">
                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -65,6 +65,16 @@ export default function PartnerProcess() {
             </motion.div>
           ))}
         </div>
+        
+        <style jsx>{`
+          .no-scrollbar::-webkit-scrollbar {
+            display: none;
+          }
+          .no-scrollbar {
+            -ms-overflow-style: none;
+            scrollbar-width: none;
+          }
+        `}</style>
       </div>
     </section>
   );

@@ -46,12 +46,15 @@ export default function PartnerProblem() {
             whileInView={{ opacity: 1, y: 0, rotate: card.rotate }}
             viewport={{ once: true, margin: "-100px" }}
             transition={{ delay: idx * 0.2, duration: 0.6 }}
-            className="glass-panel-pro p-8 rounded-3xl flex flex-col items-start justify-between min-h-[280px] bg-white/5 border-white/10 hover:border-white/30 transition-colors"
+            className="group relative overflow-hidden p-8 rounded-3xl flex flex-col items-start justify-between min-h-[280px] bg-gradient-to-br from-white/10 to-white/0 backdrop-blur-2xl border border-white/20 shadow-[0_8px_32px_rgba(0,0,0,0.2)] hover:border-white/40 hover:shadow-[0_8px_32px_rgba(198,249,32,0.1)] transition-all duration-500"
           >
-            <span className="text-4xl mb-6">{card.icon}</span>
-            <div>
+            {/* Glass Shine Effect */}
+            <div className="absolute inset-0 bg-gradient-to-tr from-transparent via-white/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none" />
+            
+            <span className="text-4xl mb-6 filter drop-shadow-md">{card.icon}</span>
+            <div className="relative z-10">
               <h3 className="text-xl font-bold text-white mb-3 whitespace-pre-line leading-snug">{card.title}</h3>
-              <p className="text-white/50 text-sm leading-relaxed whitespace-pre-line">{card.desc}</p>
+              <p className="text-white/60 text-sm leading-relaxed whitespace-pre-line group-hover:text-white/80 transition-colors">{card.desc}</p>
             </div>
           </motion.div>
         ))}
