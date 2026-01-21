@@ -5,6 +5,7 @@ import { useModalStore } from '@/app/_store/useModalStore';
 import { Button } from '@/components/ui/button';
 import { useRouter } from 'next/navigation';
 import BookmarkButton from './bookmark-button';
+import ViewingCountTooltip from './viewing-count-tooltip';
 
 interface Props {
     campaignId: string;
@@ -67,17 +68,7 @@ export default function FloatingActionBar({ campaignId, status, startDate }: Pro
     return (
         <div className="fixed bottom-0 z-[1001] w-full max-w-[480px] p-4 safe-area-bottom pointer-events-none">
             {/* 툴팁: 오픈 상태일 때만 표시 */}
-            {status === 'open' && (
-                <div className="flex justify-center mb-3">
-                    <div className="relative bg-white px-3 py-1.5 rounded-full shadow-md text-[13px] pointer-events-auto animate-bounce-custom">
-                        <span>지금 </span>
-                        <span className="text-red-500 font-bold">23명</span>
-                        <span>이 보고 있어요.</span>
-                        {/* 말풍선 꼬리 */}
-                        <div className="absolute left-1/2 -translate-x-1/2 -bottom-1 w-2.5 h-2.5 bg-white rotate-45" />
-                    </div>
-                </div>
-            )}
+            {status === 'open' && <ViewingCountTooltip />}
             
             <div className="pointer-events-auto flex items-stretch gap-3">
                 {/* 🆕 북마크(저장) 버튼 */}

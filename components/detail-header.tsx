@@ -60,7 +60,7 @@ export default function DetailHeader() {
   return (
     <header 
       className={cn(
-        "fixed top-0 left-0 right-0 z-50 flex items-center justify-between px-4 h-14 transition-all duration-300",
+        "fixed top-0 z-50 flex items-center justify-between px-4 h-14 transition-all duration-300 w-full max-w-[480px] left-1/2 -translate-x-1/2",
         isScrolled 
           ? "bg-white/70 backdrop-blur-xl border-b border-white/20" // 스크롤 시 Glassmorphism
           : "bg-transparent" // 초기 투명
