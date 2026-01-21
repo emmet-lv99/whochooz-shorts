@@ -1,8 +1,8 @@
 "use client";
 
-import { useSearchParams, useRouter } from "next/navigation";
-import { useEffect, useState, Suspense } from "react";
 import vipService, { CheckInviteResult } from "@/app/_services/vip";
+import { useRouter, useSearchParams } from "next/navigation";
+import { Suspense, useEffect, useState } from "react";
 
 // 한국 휴대폰 번호 정규식
 const PHONE_REGEX = /^010-?([0-9]{4})-?([0-9]{4})$/;
@@ -283,6 +283,61 @@ function VIPPageContent() {
           * 가입 즉시 <span className="text-vip-gold/80">1,000 Point</span>와 <span className="text-vip-gold/80">초대권 3장</span>이 지급됩니다.
         </p>
 
+        {/* --- [NEW] Service Live Preview Section --- */}
+        <div className="w-full max-w-sm mx-auto mt-12 mb-4 flex flex-col items-center animate-fade-in">
+          
+          {/* 1. Status Indicator */}
+          <div className="flex items-center space-x-2 mb-4 bg-black/40 px-3 py-1.5 rounded-full border border-white/5 backdrop-blur-sm">
+            <span className="text-sm">🟢</span>
+            <p className="text-[11px] text-white/60 tracking-wide font-medium">
+              LIVE : 비공개 리허설 중
+            </p>
+          </div>
+
+          {/* 2. Phone Mockup Container */}
+          <div className="relative w-[260px] h-[520px] bg-gray-900 rounded-[2.5rem] border-[8px] border-gray-800 shadow-2xl overflow-hidden ring-1 ring-white/10 transform transition-transform hover:scale-105 duration-500">
+            
+            {/* Dynamic Island (Notch) */}
+            <div className="absolute top-0 inset-x-0 h-6 bg-gray-800 rounded-b-xl w-24 mx-auto z-20"></div>
+
+            {/* 3. Actual Service Iframe */}
+            <iframe 
+              src="https://whochooz-shorts.vercel.app/" 
+              className="w-full h-full border-0 bg-white"
+              title="WhoChooz Live Preview"
+              loading="lazy"
+              style={{ 
+                filter: 'blur(4px)',
+                pointerEvents: 'none',
+                userSelect: 'none'
+              }} 
+            />
+
+            {/* 4. Lock Overlay */}
+            <div className="absolute inset-0 bg-black/40 backdrop-blur-[2px] z-10 flex flex-col items-center justify-center text-center p-6">
+              
+              {/* Lock Icon Circle */}
+              <div className="w-12 h-12 rounded-full bg-[var(--vip-gold)]/20 flex items-center justify-center mb-4 border border-[var(--vip-gold)]/50 shadow-[0_0_15px_rgba(212,175,55,0.2)]">
+                <svg className="w-5 h-5 text-vip-gold" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
+                </svg>
+              </div>
+              
+              <h3 className="text-white font-serif-display text-xl mb-2">Private Access</h3>
+              <p className="text-white/60 text-xs font-light leading-relaxed">
+                현재 내부 멤버들과 함께<br/>
+                비공개 시연을 진행 중입니다.
+              </p>
+
+            </div>
+
+            {/* Bottom Gradient Reflection (Detail) */}
+            <div className="absolute bottom-0 inset-x-0 h-20 bg-gradient-to-t from-black/50 to-transparent pointer-events-none z-20"></div>
+
+          </div>
+
+        </div>
+        {/* ------------------------------------------- */}
         {/* Trust & Footer Section */}
         <div className="mt-16 w-full border-t border-white/5 pt-8 pb-4 flex flex-col items-center space-y-4 animate-slide-up-delay-3">
           {/* Operator Info */}
