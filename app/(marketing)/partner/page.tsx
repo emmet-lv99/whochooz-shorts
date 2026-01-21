@@ -60,108 +60,115 @@ export default function PartnerLandingPage() {
   };
 
   return (
-    <div className="min-h-screen flex flex-col items-center justify-center relative overflow-hidden text-white font-sans break-keep">
+    <div className="partner-wrapper min-h-screen flex flex-col items-center justify-center relative text-white font-sans break-keep selection:bg-[#C6F920] selection:text-black">
       
-      {/* 1. Background (Neon Lime Aurora) */}
-      <div className="partner-background" />
-      <div className="absolute inset-0 bg-black/10 z-0" />
+      {/* 1. Background (Mesh Gradient + Noise) */}
+      <div className="partner-background">
+        <div className="aurora-blob blob-lime" />
+        <div className="aurora-blob blob-purple" />
+        <div className="aurora-blob blob-white" />
+      </div>
+      <div className="noise-overlay" />
 
-      <div className="relative z-10 w-full max-w-lg px-6 flex flex-col items-center">
+      {/* Content */}
+      <main className="relative z-10 w-full max-w-lg px-6 flex flex-col items-center">
         
-        {/* 2. Beta Badge (Glass Capsule) */}
+        {/* 2. Beta Badge (Refined) */}
         {!isSubmitted && (
-          <div className="inline-flex items-center space-x-2 px-3 py-1.5 rounded-full border border-white/10 bg-white/5 backdrop-blur-md mb-8 animate-fade-in shadow-lg">
+          <div className="inline-flex items-center space-x-2 px-4 py-2 rounded-full border border-white/10 bg-white/5 backdrop-blur-md mb-10 animate-fade-in shadow-lg hover:border-white/20 transition-colors cursor-default">
             <span className="relative flex h-2 w-2">
               <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-[#C6F920] opacity-75"></span>
               <span className="relative inline-flex rounded-full h-2 w-2 bg-[#C6F920]"></span>
             </span>
-            <span className="text-[10px] uppercase font-bold tracking-wider text-[#C6F920] text-shadow-sm">Beta Season</span>
+            <span className="text-[11px] uppercase font-bold tracking-widest text-[#C6F920] drop-shadow-sm">Beta Season</span>
           </div>
         )}
 
-        {/* 3. Hero Section */}
+        {/* 3. Hero Section (Typography) */}
         {!isSubmitted ? (
-          <div className="text-center mb-12 animate-slide-up">
-            <h1 className="text-3xl md:text-5xl font-bold mb-4 leading-tight tracking-tight">
+          <div className="text-center mb-14 animate-slide-up">
+            <h1 className="text-4xl md:text-6xl font-bold mb-6 leading-tight tracking-tight drop-shadow-2xl">
               협찬, 기다리지 말고<br/>
-              <span className="text-lime-neon transparent bg-clip-text bg-gradient-to-r from-white to-[#C6F920] opacity-90">직접 선택하세요.</span>
+              <span className="text-gradient-lime">직접 선택하세요.</span>
             </h1>
-            <p className="text-white/50 text-sm md:text-base leading-relaxed max-w-md mx-auto">
+            <p className="text-white/60 text-sm md:text-lg leading-relaxed max-w-md mx-auto font-light">
               복잡한 가이드, 지루한 원고 작성은 없습니다.<br/>
-              오직 당신의 <span className="text-white/90 font-medium">감각적인 숏폼</span> 하나면 충분합니다.
+              오직 당신의 <span className="text-white font-medium border-b border-white/20 pb-0.5">감각적인 숏폼</span> 하나면 충분합니다.
             </p>
           </div>
         ) : (
           /* Success View (Digital Receipt) */
-          <div className="animate-fade-in-up w-full max-w-sm mx-auto">
-             <div className="bg-[#fafafa] text-black rounded-t-none rounded-b-xl relative pt-1 pb-8 px-6 shadow-2xl transform rotate-1">
+          <div className="animate-fade-in-up w-full max-w-sm mx-auto perspective-1000">
+             <div className="bg-[#fafafa] text-black rounded-t-sm rounded-b-2xl relative pt-2 pb-10 px-8 shadow-2xl transform rotate-1 origin-top hover:rotate-0 transition-transform duration-500">
                {/* Top Neon Border */}
                <div className="absolute top-0 left-0 right-0 h-1.5 bg-[#C6F920]" />
                
-               <div className="mt-8 flex flex-col items-center text-center space-y-4">
-                 <div className="w-12 h-12 rounded-full border-2 border-[#C6F920] flex items-center justify-center text-[#9AC319]">
-                   <svg className="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+               <div className="mt-8 flex flex-col items-center text-center space-y-6">
+                 <div className="w-14 h-14 rounded-full border-[3px] border-[#C6F920] flex items-center justify-center text-[#9AC319] bg-white shadow-inner">
+                   <svg className="w-7 h-7" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={3} d="M5 13l4 4L19 7" />
                    </svg>
                  </div>
                  
                  <div>
-                   <h3 className="text-xl font-bold tracking-tight mb-1">Pre-Registered</h3>
-                   <p className="text-[10px] text-gray-400 uppercase tracking-widest">Digital Receipt</p>
+                   <h3 className="text-2xl font-bold tracking-tight mb-1">Pre-Registered</h3>
+                   <p className="text-[11px] text-gray-400 uppercase tracking-[0.2em]">Digital Receipt</p>
                  </div>
 
-                 <div className="w-full border-t border-dashed border-gray-300 my-4" />
+                 <div className="w-full border-t-2 border-dashed border-gray-200" />
 
-                 <div className="text-sm font-medium text-gray-800">
+                 <div className="text-base font-medium text-gray-800">
                    <p>2026. 02 Grand Open</p>
-                   <p className="text-xs text-gray-500 mt-1 font-normal">알림을 기다려주세요.</p>
+                   <p className="text-xs text-gray-400 mt-2 font-normal">알림을 기다려주세요.</p>
                  </div>
                </div>
              </div>
           </div>
         )}
 
-        {/* 4. Input Section (The Portal) */}
+        {/* 4. Input Section (Levitating Glass Portal) */}
         {!isSubmitted && (
-          <div className="w-full max-w-sm animate-slide-up-delay-1 space-y-4">
-             <div className="glass-panel p-1.5 rounded-2xl flex items-center space-x-2">
+          <div className="w-full max-w-sm animate-slide-up-delay-1 mb-16">
+             <div className="partner-input-wrapper flex items-center p-1.5 gap-2 backdrop-blur-xl">
                 <input 
                   type="tel"
                   placeholder="010-1234-5678"
                   value={phone}
                   onChange={(e) => setPhone(formatPhoneNumber(e.target.value))}
                   maxLength={13}
-                  className="partner-input flex-1 bg-transparent border-none text-center h-12 focus:ring-0 focus:shadow-none placeholder:text-white/20"
+                  className="partner-input"
                 />
                 <button 
                   onClick={handleJoin}
                   disabled={isLoading}
-                  className="partner-button h-12 px-6 rounded-xl font-bold text-sm shrink-0"
+                  className="partner-button shrink-0"
                 >
-                  {isLoading ? '...' : '지원하기'}
+                  {isLoading ? (
+                    <span className="w-5 h-5 border-2 border-white/30 border-t-white rounded-full animate-spin inline-block" />
+                  ) : '지원하기'}
                 </button>
              </div>
           </div>
         )}
 
-        {/* 5. Feature Cards (Glass Tiles) */}
+        {/* 5. Feature Cards (High-end Glass Tiles) */}
         {!isSubmitted && (
-          <div className="grid grid-cols-3 gap-3 w-full mt-16 animate-slide-up-delay-2">
+          <div className="grid grid-cols-3 gap-4 w-full animate-slide-up-delay-2">
             {[
               { icon: '🛍️', title: 'Pick', desc: '쇼핑하듯\n선택' },
               { icon: '🚫', title: 'No Text', desc: '원고 작성\n스트레스 X' },
               { icon: '🎁', title: 'Get', desc: '제품 협찬\n+ 포인트' },
             ].map((item, idx) => (
-              <div key={idx} className="glass-panel partner-card p-4 rounded-xl flex flex-col items-center text-center">
-                <span className="text-2xl mb-2 filter drop-shadow-md">{item.icon}</span>
-                <h3 className="text-xs font-bold text-white mb-1 uppercase tracking-wider">{item.title}</h3>
-                <p className="text-[10px] text-white/50 leading-tight whitespace-pre-line">{item.desc}</p>
+              <div key={idx} className="glass-panel-pro p-5 rounded-2xl flex flex-col items-center text-center group cursor-default">
+                <span className="text-3xl mb-3 filter drop-shadow-lg group-hover:scale-110 transition-transform duration-300">{item.icon}</span>
+                <h3 className="text-[11px] font-bold text-white mb-1.5 uppercase tracking-widest">{item.title}</h3>
+                <p className="text-[10px] text-white/50 leading-tight whitespace-pre-line group-hover:text-white/80 transition-colors">{item.desc}</p>
               </div>
             ))}
           </div>
         )}
 
-      </div>
+      </main>
     </div>
   );
 }
