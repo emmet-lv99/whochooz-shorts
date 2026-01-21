@@ -186,14 +186,71 @@ function VIPSuccessContent() {
               }}
             ></div>
             
-            {/* 4. Gold Glow Border */}
+            {/* 5. Gold Glow Border */}
             <div className="absolute inset-0 border-2 border-[#D4AF37]/50 rounded-2xl shadow-[inset_0_0_20px_rgba(212,175,55,0.2)]"></div>
             
-            {/* 5. Sparkle Effect (on hover) */}
-            <div className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-500">
-              <div className="absolute top-[20%] left-[15%] w-1 h-1 bg-white rounded-full animate-pulse shadow-[0_0_10px_white]"></div>
-              <div className="absolute top-[40%] right-[20%] w-0.5 h-0.5 bg-white rounded-full animate-pulse delay-100 shadow-[0_0_8px_white]"></div>
-              <div className="absolute bottom-[30%] left-[60%] w-1 h-1 bg-white rounded-full animate-pulse delay-200 shadow-[0_0_10px_white]"></div>
+            {/* 6. Twinkling Stars Effect (카드 움직임에 따라 반짝임) */}
+            <div className="absolute inset-0 pointer-events-none overflow-hidden">
+              {/* Star 1 */}
+              <div 
+                className="absolute w-1 h-1 rounded-full bg-white shadow-[0_0_6px_white,0_0_12px_rgba(212,175,55,0.5)]"
+                style={{
+                  top: '15%',
+                  left: '20%',
+                  opacity: Math.abs(Math.sin(autoAngle * 0.05)) * 0.8,
+                  transform: `scale(${0.5 + Math.abs(Math.sin(autoAngle * 0.05)) * 0.5})`,
+                }}
+              ></div>
+              {/* Star 2 */}
+              <div 
+                className="absolute w-0.5 h-0.5 rounded-full bg-white shadow-[0_0_4px_white,0_0_8px_rgba(212,175,55,0.4)]"
+                style={{
+                  top: '35%',
+                  right: '25%',
+                  opacity: Math.abs(Math.sin(autoAngle * 0.07 + 1)) * 0.7,
+                  transform: `scale(${0.5 + Math.abs(Math.sin(autoAngle * 0.07 + 1)) * 0.5})`,
+                }}
+              ></div>
+              {/* Star 3 */}
+              <div 
+                className="absolute w-1 h-1 rounded-full bg-white shadow-[0_0_6px_white,0_0_10px_rgba(212,175,55,0.5)]"
+                style={{
+                  bottom: '25%',
+                  left: '65%',
+                  opacity: Math.abs(Math.sin(autoAngle * 0.04 + 2)) * 0.9,
+                  transform: `scale(${0.5 + Math.abs(Math.sin(autoAngle * 0.04 + 2)) * 0.5})`,
+                }}
+              ></div>
+              {/* Star 4 */}
+              <div 
+                className="absolute w-0.5 h-0.5 rounded-full bg-[#FCF6BA] shadow-[0_0_4px_rgba(252,246,186,0.8)]"
+                style={{
+                  top: '55%',
+                  left: '12%',
+                  opacity: Math.abs(Math.sin(autoAngle * 0.06 + 3)) * 0.6,
+                  transform: `scale(${0.5 + Math.abs(Math.sin(autoAngle * 0.06 + 3)) * 0.5})`,
+                }}
+              ></div>
+              {/* Star 5 */}
+              <div 
+                className="absolute w-0.5 h-0.5 rounded-full bg-white shadow-[0_0_5px_white]"
+                style={{
+                  top: '70%',
+                  right: '15%',
+                  opacity: Math.abs(Math.sin(autoAngle * 0.08 + 4)) * 0.7,
+                  transform: `scale(${0.5 + Math.abs(Math.sin(autoAngle * 0.08 + 4)) * 0.5})`,
+                }}
+              ></div>
+              {/* Star 6 */}
+              <div 
+                className="absolute w-1 h-1 rounded-full bg-[#D4AF37] shadow-[0_0_8px_rgba(212,175,55,0.8)]"
+                style={{
+                  top: '25%',
+                  right: '40%',
+                  opacity: Math.abs(Math.sin(autoAngle * 0.03 + 5)) * 0.5,
+                  transform: `scale(${0.3 + Math.abs(Math.sin(autoAngle * 0.03 + 5)) * 0.4})`,
+                }}
+              ></div>
             </div>
             
             {/* Card Content */}
