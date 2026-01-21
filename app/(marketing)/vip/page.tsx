@@ -209,17 +209,21 @@ function VIPPageContent() {
         <div className="text-center mb-10">
           <div className="animate-slide-up">
             <div className="vip-badge mx-auto mb-8">
-              <span className="w-2 h-2 bg-[var(--vip-gold)] rounded-full" />
+              <span className="w-2 h-2 bg-[var(--vip-gold)] rounded-full animate-pulse" />
               FOUNDING CREW
             </div>
 
-            <h1 className="font-serif-display text-3xl md:text-4xl text-white mb-3">
-              Welcome.
+            <h1 className="font-serif-display text-4xl md:text-5xl text-white mb-4">
+              Dear. Creator
             </h1>
             {ownerName && (
-              <p className="text-white/60">
-                <span className="text-vip-gold font-medium">{ownerName}</span>님의 초대입니다.
-              </p>
+              <div className="space-y-1 text-white/60 text-sm md:text-base">
+                <p>
+                  <span className="text-vip-gold font-semibold">Founder {ownerName}</span>님이
+                  귀하의 감각을 높이 평가하여 초대했습니다.
+                </p>
+                <p>상위 1%를 위한 프라이빗 멤버십을 시작해 보세요.</p>
+              </div>
             )}
           </div>
         </div>
@@ -232,10 +236,11 @@ function VIPPageContent() {
                 type="text"
                 value={instagram}
                 onChange={(e) => setInstagram(e.target.value)}
-                placeholder="Instagram ID (@)"
+                placeholder="Instagram ID (@없이 입력)"
                 className="vip-input"
                 autoComplete="off"
                 autoCapitalize="off"
+                autoFocus
               />
             </div>
 
@@ -267,7 +272,7 @@ function VIPPageContent() {
                   처리 중...
                 </>
               ) : (
-                "Activate Membership"
+                "VIP 멤버십 활성화하기 ✨"
               )}
             </button>
           </div>
@@ -275,7 +280,7 @@ function VIPPageContent() {
 
         {/* 하단 안내 */}
         <p className="text-center text-white/30 text-xs mt-8 animate-slide-up-delay-3">
-          가입 시 마스터 권한(초대권 3장)이 부여됩니다.
+          * 가입 즉시 <span className="text-vip-gold/80">1,000 Point</span>와 <span className="text-vip-gold/80">초대권 3장</span>이 지급됩니다.
         </p>
       </div>
     </div>
