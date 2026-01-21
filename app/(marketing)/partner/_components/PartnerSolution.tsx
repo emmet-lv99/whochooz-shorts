@@ -26,9 +26,9 @@ export default function PartnerSolution() {
 
         <div className="space-y-6">
           {[
-            { title: 'No Sales Hustle (영업 없음)', desc: '팔로워 0명이라도 OK. 광고주 설득은 우리가 합니다.' },
-            { title: 'No Script Interference (간섭 없음)', desc: '광고주의 강요는 없습니다. 최소 스펙만 지키고 당신이 기획한 대로 찍으세요.' },
-            { title: 'No Complex Terms (복잡함 없음)', desc: '계약서 검토, 정산... 머리 아픈 행정 업무는 잊으세요.' },
+            { title: '지치는 영업은 잊으세요.', desc: '팔로워 0명이라도 OK. 광고주 설득은 우리가 합니다.' },
+            { title: '창작에 간섭하지 않습니다.', desc: '광고주의 강요는 없습니다. 최소 스펙만 지키고 당신이 기획한 대로 찍으세요.' },
+            { title: '복잡한 절차는 없습니다.', desc: '계약서 검토, 정산... 머리 아픈 행정 업무는 잊으세요.' },
           ].map((item, idx) => (
               <motion.div 
                 key={idx}
