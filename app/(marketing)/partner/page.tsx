@@ -1,6 +1,7 @@
 'use client';
 
 import { supabase } from '@/lib/supabase';
+import { formatPhoneNumber, PHONE_REGEX } from '@/lib/utils';
 import { useState } from 'react';
 import '../marketing.css'; // 스타일 로드
 
@@ -12,8 +13,12 @@ export default function PartnerLandingPage() {
   const handleJoin = async () => {
     // 1. Validation
     if (!phone) return alert('전화번호를 입력해주세요.');
+    
+    // 포맷팅된 번호 검증 (010-XXXX-XXXX)
+    if (!PHONE_REGEX.test(phone)) return alert('올바른 휴대폰 번호를 입력해주세요.');
+    
+    // DB 저장용 하이픈 제거
     const cleanPhone = phone.replace(/-/g, '').trim();
-    if (!/^010\d{8}$/.test(cleanPhone)) return alert('올바른 휴대폰 번호를 입력해주세요.');
 
     setIsLoading(true);
 
@@ -124,7 +129,8 @@ export default function PartnerLandingPage() {
                   type="tel"
                   placeholder="010-1234-5678"
                   value={phone}
-                  onChange={(e) => setPhone(e.target.value)}
+                  onChange={(e) => setPhone(formatPhoneNumber(e.target.value))}
+                  maxLength={13}
                   className="partner-input flex-1 bg-transparent border-none text-center h-12 focus:ring-0 focus:shadow-none placeholder:text-white/20"
                 />
                 <button 
