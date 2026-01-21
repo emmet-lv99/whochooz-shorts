@@ -15,21 +15,21 @@ export default function PartnerSolution() {
         {/* Content Side */}
         <div className="flex-1 max-w-md">
           <motion.h2 
-            initial={{ opacity: 0, x: -50 }}
-            whileInView={{ opacity: 1, x: 0 }}
-            viewport={{ once: true }}
-            className="text-3xl md:text-5xl font-bold mb-8 leading-tight text-left"
-          >
-            그래서 없앴습니다.<br/>
-            <span className="text-gradient-lime">귀찮은 모든 것들을.</span>
-          </motion.h2>
+          initial={{ opacity: 0, x: -50 }}
+          whileInView={{ opacity: 1, x: 0 }}
+          viewport={{ once: true }}
+          className="text-3xl md:text-5xl font-bold mb-8 leading-tight text-left"
+        >
+          그래서 없앴습니다.<br/>
+          창작을 방해하는 <span className="text-gradient-lime">'불필요한 과정'</span>들을.
+        </motion.h2>
 
-          <div className="space-y-6">
-            {[
-              { title: 'No Follower Count', desc: '팔로워 0명이어도 영상 퀄리티만 좋다면 OK.' },
-              { title: 'No Script Stress', desc: '대본 없음. 가이드 없음. 100% 자율 리뷰.' },
-              { title: 'No Contact', desc: '광고주와 직접 연락할 필요 없음. 앱으로 끝.' },
-            ].map((item, idx) => (
+        <div className="space-y-6">
+          {[
+            { title: 'No Sales Hustle (영업 없음)', desc: '팔로워 0명이라도 OK. 광고주 설득은 우리가 합니다.' },
+            { title: 'No Script Interference (간섭 없음)', desc: '광고주의 강요는 없습니다. 최소 스펙만 지키고 당신이 기획한 대로 찍으세요.' },
+            { title: 'No Complex Terms (복잡함 없음)', desc: '계약서 검토, 정산... 머리 아픈 행정 업무는 잊으세요.' },
+          ].map((item, idx) => (
               <motion.div 
                 key={idx}
                 initial={{ opacity: 0, x: -30 }}

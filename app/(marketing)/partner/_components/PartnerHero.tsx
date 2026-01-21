@@ -38,8 +38,9 @@ export default function PartnerHero({ onScrollToCTA }: { onScrollToCTA: () => vo
         transition={{ delay: 0.6 }}
         className="text-white/60 text-sm md:text-xl leading-relaxed max-w-2xl mx-auto font-light mb-12"
       >
-        팔로워 수? 블로그 원고? 복잡한 건 저희가 합니다.<br/>
-        당신은 오직 <span className="text-white font-medium border-b border-white/20 pb-0.5">감각적인 숏폼</span>만 준비하세요.
+        광고주에게 나를 증명하는 일, 까다로운 조건 협의...<br className="hidden md:block" />
+        지치는 <span className="text-white font-medium">'비즈니스'</span>는 WhoChooz가 맡겠습니다.<br/><br className="md:hidden"/>
+        당신은 오직 <span className="text-white font-medium border-b border-white/20 pb-0.5">당신만의 기획과 촬영</span>에 집중하세요.
       </motion.p>
 
       {/* Breathing CTA Button */}
