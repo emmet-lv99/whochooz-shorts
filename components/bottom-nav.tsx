@@ -69,8 +69,9 @@ export function BottomNav() {
   const isDetailPage = (pathname.startsWith('/campaigns/') && pathname.split('/').length > 2) ||
                        (pathname.startsWith('/shorts/') && pathname.split('/').length > 2);
   const isVipPage = pathname.startsWith('/vip');
+  const isPartnerPage = pathname.startsWith('/partner');
 
-  if (isDetailPage || isVipPage) {
+  if (isDetailPage || isVipPage || isPartnerPage) {
     return null;
   }
 
