@@ -34,6 +34,7 @@ function VIPPageContent() {
   const [phone, setPhone] = useState("");
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [formError, setFormError] = useState("");
+  const [isOpen, setIsOpen] = useState(false); // What is WhoChooz 토글 상태
 
   // 코드 검증
   useEffect(() => {
@@ -219,7 +220,7 @@ function VIPPageContent() {
             {ownerName && (
               <div className="space-y-1 text-white/60 text-sm md:text-base">
                 <p>
-                  <span className="text-vip-gold font-semibold">Founder {ownerName}</span>님이
+                  <span className="text-vip-gold font-semibold">{ownerName}</span>님이
                   귀하의 감각을 높이 평가하여 초대했습니다.
                 </p>
                 <p>상위 1%를 위한 프라이빗 멤버십을 시작해 보세요.</p>
@@ -227,6 +228,65 @@ function VIPPageContent() {
             )}
           </div>
         </div>
+
+        {/* --- [FINAL CORRECTED] Service Intro Toggle --- */}
+        <div className="w-full max-w-sm mx-auto mt-6 mb-8">
+          
+          {/* Toggle Button */}
+          <button 
+            onClick={() => setIsOpen(!isOpen)}
+            className="group flex items-center justify-center w-full py-2 transition-all"
+          >
+            <span className="text-[10px] tracking-[0.2em] text-[#D4AF37] group-hover:text-white transition-colors uppercase mr-2">
+              What is WhoChooz
+            </span>
+            <svg 
+              className={`w-3 h-3 text-[#D4AF37] transform transition-transform duration-500 ${isOpen ? 'rotate-180' : ''}`} 
+              fill="none" viewBox="0 0 24 24" stroke="currentColor"
+            >
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M19 9l-7 7-7-7" />
+            </svg>
+          </button>
+
+          {/* Content Area */}
+          <div 
+            className={`overflow-hidden transition-all duration-700 ease-[cubic-bezier(0.4,0,0.2,1)] ${
+              isOpen ? 'max-h-80 opacity-100 mt-4' : 'max-h-0 opacity-0'
+            }`}
+          >
+            <div className="bg-white/5 border border-white/10 rounded-xl p-5 space-y-5 backdrop-blur-md">
+              
+              {/* Benefit 1: 100% Free Sponsorship (핵심: 돈 안 듦) */}
+              <div className="flex items-start space-x-3 text-left">
+                <div className="mt-1 w-1.5 h-1.5 rounded-full bg-[#D4AF37] shadow-[0_0_8px_#D4AF37]" />
+                <div>
+                  <h4 className="text-white text-sm font-serif italic mb-1">Zero Cost Sponsorship</h4>
+                  <p className="text-white/60 text-xs leading-relaxed">
+                    금전적 부담은 일체 없습니다.<br/>
+                    트렌디한 <span className="text-white/90 font-medium">상품</span>부터 핫한 <span className="text-white/90 font-medium">방문 서비스</span>까지,<br/>
+                    오직 신청을 통해 무료로 경험하세요.
+                  </p>
+                </div>
+              </div>
+
+              {/* Benefit 2: Short-form Review (핵심: 숏폼이라 편함) */}
+              <div className="flex items-start space-x-3 text-left">
+                <div className="mt-1 w-1.5 h-1.5 rounded-full bg-[#D4AF37] shadow-[0_0_8px_#D4AF37]" />
+                <div>
+                  <h4 className="text-white text-sm font-serif italic mb-1">Short-form Reviewer</h4>
+                  <p className="text-white/60 text-xs leading-relaxed">
+                    지루한 블로그 포스팅은 그만.<br/>
+                    당신의 감각이 담긴 <span className="text-white/90 font-medium">숏폼 영상</span> 하나면<br/>
+                    모든 체험단 활동이 완료됩니다.
+                  </p>
+                </div>
+              </div>
+
+            </div>
+          </div>
+
+        </div>
+        {/* ----------------------------------------------- */}
 
         {/* 폼 */}
         <form onSubmit={handleSubmit} className="space-y-4">
@@ -283,61 +343,70 @@ function VIPPageContent() {
           * 가입 즉시 <span className="text-vip-gold/80">1,000 Point</span>와 <span className="text-vip-gold/80">초대권 3장</span>이 지급됩니다.
         </p>
 
-        {/* --- [NEW] Service Live Preview Section --- */}
-        <div className="w-full max-w-sm mx-auto mt-12 mb-4 flex flex-col items-center animate-fade-in">
+        {/* --- [FINAL POLISH] Service Live Preview Section --- */}
+        <div className="w-full max-w-sm mx-auto mt-16 mb-20 flex flex-col items-center animate-fade-in-up delay-300">
           
           {/* 1. Status Indicator */}
-          <div className="flex items-center space-x-2 mb-4 bg-black/40 px-3 py-1.5 rounded-full border border-white/5 backdrop-blur-sm">
-            <span className="text-sm">🟢</span>
-            <p className="text-[11px] text-white/60 tracking-wide font-medium">
-              LIVE : 비공개 리허설 중
+          <div className="flex items-center space-x-2 mb-4 bg-black/40 px-3 py-1.5 rounded-full border border-white/5 backdrop-blur-sm shadow-lg">
+            <span className="relative flex h-2 w-2">
+              <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-green-400 opacity-75"></span>
+              <span className="relative inline-flex rounded-full h-2 w-2 bg-green-500"></span>
+            </span>
+            {/* 변경: 개발팀 테스트 -> 최종 튜닝 진행 중 (훨씬 전문적임) */}
+            <p className="text-[11px] text-white/80 tracking-wide font-medium">
+              LIVE : 최종 튜닝 진행 중
             </p>
           </div>
 
-          {/* 2. Phone Mockup Container */}
+          {/* 2. Phone Mockup */}
           <div className="relative w-[260px] h-[520px] bg-gray-900 rounded-[2.5rem] border-[8px] border-gray-800 shadow-2xl overflow-hidden ring-1 ring-white/10 transform transition-transform hover:scale-105 duration-500">
             
-            {/* Dynamic Island (Notch) */}
             <div className="absolute top-0 inset-x-0 h-6 bg-gray-800 rounded-b-xl w-24 mx-auto z-20"></div>
 
-            {/* 3. Actual Service Iframe */}
             <iframe 
               src="https://whochooz-shorts.vercel.app/" 
               className="w-full h-full border-0 bg-white"
               title="WhoChooz Live Preview"
               loading="lazy"
               style={{ 
-                filter: 'blur(4px)',
+                filter: 'blur(6px)', // 신비감을 위해 블러를 살짝 더 줌
                 pointerEvents: 'none',
                 userSelect: 'none'
               }} 
             />
 
-            {/* 4. Lock Overlay */}
+            {/* 3. Lock Overlay */}
             <div className="absolute inset-0 bg-black/40 backdrop-blur-[2px] z-10 flex flex-col items-center justify-center text-center p-6">
               
-              {/* Lock Icon Circle */}
-              <div className="w-12 h-12 rounded-full bg-[var(--vip-gold)]/20 flex items-center justify-center mb-4 border border-[var(--vip-gold)]/50 shadow-[0_0_15px_rgba(212,175,55,0.2)]">
-                <svg className="w-5 h-5 text-vip-gold" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
+              {/* Icon: Clock (시간/튜닝을 상징) */}
+              <div className="w-12 h-12 rounded-full bg-[#D4AF37]/20 flex items-center justify-center mb-4 border border-[#D4AF37]/50 shadow-[0_0_15px_rgba(212,175,55,0.2)]">
+                <svg className="w-6 h-6 text-[#D4AF37]" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
                 </svg>
               </div>
               
-              <h3 className="text-white font-serif-display text-xl mb-2">Private Access</h3>
-              <p className="text-white/60 text-xs font-light leading-relaxed">
-                현재 내부 멤버들과 함께<br/>
-                비공개 시연을 진행 중입니다.
+              {/* 문구 변경: Final Calibration */}
+              <h3 className="text-white font-serif text-xl mb-2 tracking-tight">
+                Final Calibration
+              </h3>
+              
+              <p className="text-white/70 text-xs font-light leading-relaxed">
+                최고의 경험을 위해<br/>
+                <span className="text-[#D4AF37] font-semibold">마지막 튜닝</span>을 진행하고 있습니다.
+              </p>
+              
+              <p className="mt-3 text-[10px] text-white/40 border-t border-white/10 pt-3 w-full">
+                * Founding Crew에게 가장 먼저 공개됩니다
               </p>
 
             </div>
 
-            {/* Bottom Gradient Reflection (Detail) */}
             <div className="absolute bottom-0 inset-x-0 h-20 bg-gradient-to-t from-black/50 to-transparent pointer-events-none z-20"></div>
 
           </div>
 
         </div>
-        {/* ------------------------------------------- */}
+
         {/* Trust & Footer Section */}
         <div className="mt-16 w-full border-t border-white/5 pt-8 pb-4 flex flex-col items-center space-y-4 animate-slide-up-delay-3">
           {/* Operator Info */}
