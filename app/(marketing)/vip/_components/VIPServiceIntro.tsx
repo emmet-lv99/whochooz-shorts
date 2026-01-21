@@ -36,7 +36,7 @@ export default function VIPServiceIntro({ isOpen, setIsOpen }: VIPServiceIntroPr
             <div className="mt-1 w-1.5 h-1.5 rounded-full bg-[#D4AF37] shadow-[0_0_8px_#D4AF37]" />
             <div>
               <h4 className="text-white text-sm font-serif italic mb-1">Zero Cost Sponsorship</h4>
-              <p className="text-white/60 text-xs leading-relaxed">
+              <p className="text-white/60 text-xs leading-relaxed break-keep">
                 금전적 부담은 일체 없습니다.<br/>
                 트렌디한 <span className="text-white/90 font-medium">상품</span>부터 핫한 <span className="text-white/90 font-medium">방문 서비스</span>까지,<br/>
                 오직 신청을 통해 무료로 경험하세요.
@@ -49,7 +49,7 @@ export default function VIPServiceIntro({ isOpen, setIsOpen }: VIPServiceIntroPr
             <div className="mt-1 w-1.5 h-1.5 rounded-full bg-[#D4AF37] shadow-[0_0_8px_#D4AF37]" />
             <div>
               <h4 className="text-white text-sm font-serif italic mb-1">Short-form Reviewer</h4>
-              <p className="text-white/60 text-xs leading-relaxed">
+              <p className="text-white/60 text-xs leading-relaxed break-keep">
                 지루한 블로그 포스팅은 그만.<br/>
                 당신의 감각이 담긴 <span className="text-white/90 font-medium">숏폼 영상</span> 하나면<br/>
                 모든 체험단 활동이 완료됩니다.

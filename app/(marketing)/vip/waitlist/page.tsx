@@ -23,9 +23,34 @@ function WaitlistContent() {
   const [isSubmitted, setIsSubmitted] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
 
-  const reasonText = reason === 'global' 
-    ? "아쉽게도 Season 1 Founding Crew 모집이 모두 마감되었어요."
-    : "이 초대장은 유효 기간이 지났거나, 이미 사용된 티켓이에요.";
+  const reasonKey = (reason === 'global' ? 'global' : 'code') as 'global' | 'code';
+  
+  const content = {
+    code: {
+      title: "Invitation Expired",
+      desc: (
+        <>
+          이 초대장은 유효 기간이 지났거나, 이미 사용된 티켓이에요.<br/>
+          <span className="text-[#D4AF37] font-bold mt-2 inline-block tracking-wide">
+            2026. 02 Grand Open
+          </span>
+        </>
+      )
+    },
+    global: {
+      title: "See You in February",
+      desc: (
+        <>
+          Founding Crew 1,000명 모집이 마감되었습니다.<br/>
+          <span className="text-white font-bold mt-2 inline-block text-lg tracking-wider">
+            2026. 02 정식 오픈 예정
+          </span>
+        </>
+      )
+    }
+  };
+
+  const currentContent = content[reasonKey];
 
   const handleJoin = async () => {
     // 1. 유효성 검사
@@ -102,15 +127,15 @@ function WaitlistContent() {
         {/* 2. Message */}
         <div className="mb-10 animate-slide-up">
           <h1 className="text-3xl md:text-4xl font-serif-display text-white mb-2 tracking-tight drop-shadow-lg">
-            Season 2 Priority
+            {currentContent.title}
           </h1>
           <p className="text-[#D4AF37] text-xs md:text-sm font-medium tracking-[0.2em] uppercase mb-6 opacity-80">
             2차 VIP 모집 사전 예약
           </p>
           
           <div className="text-white/40 text-sm leading-relaxed bg-white/5 rounded-xl p-4 border border-white/5 break-keep">
-            <p className="mb-1 text-white/60">{reasonText}</p>
-            <p className="text-xs">
+            <p className="mb-4 text-white/80 leading-relaxed">{currentContent.desc}</p>
+            <p className="text-xs pt-4 border-t border-white/10">
               지금 예약해 두시면, 다음 시즌 오픈 시<br/>
               <span className="text-white/90 font-medium border-b border-white/20 pb-0.5">가장 먼저</span> 초대장을 보내드릴게요.
             </p>

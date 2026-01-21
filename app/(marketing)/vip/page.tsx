@@ -8,8 +8,9 @@ import VIPNoCodeState from "./_components/VIPNoCodeState";
 
 // 컴포넌트 imports
 
+import VIPFooter from './_components/VIPFooter';
 import VIPLivePreview from "./_components/VIPLivePreview";
-import VIPServiceIntro from "./_components/VIPServiceIntro";
+import VIPServiceIntro from './_components/VIPServiceIntro';
 import VIPValidForm from "./_components/VIPValidForm";
 
 // 한국 휴대폰 번호 정규식
@@ -177,48 +178,16 @@ function VIPPageContent() {
         />
 
         {/* 하단 안내 */}
-        <p className="text-center text-white/30 text-xs mt-8 animate-slide-up-delay-3 break-keep">
-        * 멤버십 등록 즉시 <span className="text-vip-gold/80">1,000 Point</span>와 <span className="text-vip-gold/80">초대권 3장</span>을 선물로 드려요.
-      </p>
+        <p className="text-center text-white/30 text-[10px] mt-8 mb-20 animate-slide-up-delay-3 break-keep leading-relaxed">
+          * 멤버십 등록 즉시 <span className="text-vip-gold/80">1,000 Point</span>와 <span className="text-vip-gold/80">초대권 3장</span>을 선물로 드려요.<br/>
+          <span className="text-white/50">(2월 오픈 시 알림 문자 발송)</span>
+        </p>
 
         {/* --- [FINAL POLISH] Service Live Preview Section --- */}
         <VIPLivePreview />
 
-        {/* Trust & Footer Section */}
-        <div className="mt-16 w-full border-t border-white/5 pt-8 pb-4 flex flex-col items-center space-y-4 animate-slide-up-delay-3">
-          {/* Operator Info */}
-          <div className="text-center space-y-1">
-            <p className="text-[10px] text-white/30 tracking-widest uppercase">Operated by</p>
-            <h4 className="text-sm font-serif-display text-white/50 font-bold tracking-wider">ANMOKGOSU Inc.</h4>
-          </div>
-
-          {/* Family Services Links */}
-          <div className="flex space-x-6 text-[10px] text-white/30">
-            <a
-              href="https://anmokgosu.net"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="hover:text-vip-gold transition-colors border-b border-transparent hover:border-vip-gold"
-            >
-              Anmokgosu Media ↗
-            </a>
-            <span className="text-white/10">|</span>
-            <a
-              href="https://pf.anmokgosu.com"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="hover:text-vip-gold transition-colors border-b border-transparent hover:border-vip-gold"
-            >
-              Pickymall Solution ↗
-            </a>
-          </div>
-
-          {/* Copyright & Info */}
-          <div className="text-[9px] text-white/20 text-center leading-relaxed">
-            <p>서울시 강남구 테헤란로 5길 7</p>
-            <p>© 2026 WhoChooz Lab. All rights reserved.</p>
-          </div>
-        </div>
+        {/* Footer */}
+        <VIPFooter />
       </div>
     </div>
   );

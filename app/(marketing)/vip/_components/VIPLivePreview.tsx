@@ -3,13 +3,14 @@ export default function VIPLivePreview() {
     <div className="w-full max-w-sm mx-auto mt-16 mb-20 flex flex-col items-center animate-fade-in-up delay-300">
       
       {/* 1. Status Indicator */}
+      {/* 1. Status Indicator */}
       <div className="flex items-center space-x-2 mb-4 bg-black/40 px-3 py-1.5 rounded-full border border-white/5 backdrop-blur-sm shadow-lg">
         <span className="relative flex h-2 w-2">
-          <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-green-400 opacity-75"></span>
-          <span className="relative inline-flex rounded-full h-2 w-2 bg-green-500"></span>
+          <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-[#D4AF37] opacity-75"></span>
+          <span className="relative inline-flex rounded-full h-2 w-2 bg-[#D4AF37]"></span>
         </span>
-        <p className="text-[11px] text-white/80 tracking-wide font-medium">
-          LIVE : 최종 튜닝 진행 중
+        <p className="text-[11px] text-[#D4AF37] tracking-wide font-bold uppercase break-keep">
+          Grand Open : 2026. 02
         </p>
       </div>
 
@@ -44,9 +45,9 @@ export default function VIPLivePreview() {
             Final Calibration
           </h3>
           
-          <p className="text-white/70 text-xs font-light leading-relaxed">
-            최고의 경험을 위해<br/>
-            <span className="text-[#D4AF37] font-semibold">마지막 튜닝</span>을 진행하고 있습니다.
+          <p className="text-white/70 text-xs font-light leading-relaxed break-keep">
+            <span className="text-[#D4AF37] font-semibold">2026년 2월</span> 정식 오픈을 위해<br/>
+            마지막 튜닝을 진행하고 있습니다.
           </p>
           
           <p className="mt-3 text-[10px] text-white/40 border-t border-white/10 pt-3 w-full">
