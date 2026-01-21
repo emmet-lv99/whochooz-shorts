@@ -2,7 +2,7 @@
 
 import { supabase } from '@/lib/supabase';
 import { useSearchParams } from 'next/navigation';
-import { useState } from 'react';
+import { Suspense, useState } from 'react';
 
 const PHONE_REGEX = /^010-?([0-9]{4})-?([0-9]{4})$/;
 
@@ -13,7 +13,7 @@ function formatPhoneNumber(value: string): string {
   return `${numbers.slice(0, 3)}-${numbers.slice(3, 7)}-${numbers.slice(7, 11)}`;
 }
 
-export default function WaitlistPage() {
+function WaitlistContent() {
   const searchParams = useSearchParams();
   const reason = searchParams.get('reason'); 
   const inviterCode = searchParams.get('code') || null; 
@@ -175,5 +175,13 @@ export default function WaitlistPage() {
         </div>
       </div>
     </div>
+  );
+}
+
+export default function WaitlistPage() {
+  return (
+    <Suspense fallback={<div className="min-h-screen bg-black" />}>
+      <WaitlistContent />
+    </Suspense>
   );
 }
