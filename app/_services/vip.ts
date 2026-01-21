@@ -157,6 +157,37 @@ export const vipService = {
       return { code: null };
     }
   },
+
+  /**
+   * 2차 알림 예약 (Waitlist)
+   */
+  async addToWaitlist(data: {
+    name: string;
+    phone: string;
+    reason: string;
+    inviter_code: string | null;
+  }): Promise<{ success: boolean; error?: any }> {
+    try {
+      const { error } = await supabase
+        .from('waitlist')
+        .insert({
+          name: data.name,
+          phone: data.phone,
+          reason: data.reason,
+          inviter_code: data.inviter_code
+        });
+
+      if (error) {
+        console.error("addToWaitlist error:", error);
+        return { success: false, error };
+      }
+
+      return { success: true };
+    } catch (e) {
+      console.error("addToWaitlist exception:", e);
+      return { success: false, error: e };
+    }
+  },
 };
 
 export default vipService;
