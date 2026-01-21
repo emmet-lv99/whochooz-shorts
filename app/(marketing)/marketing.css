@@ -11,6 +11,12 @@
   --vip-gray: #6b7280;
   --vip-gray-light: #9ca3af;
   --vip-white: #fafafa;
+  
+  /* Landing C Theme Vars */
+  --c-lime: #C6F920;
+  --c-lime-dim: rgba(198, 249, 32, 0.1);
+  --c-lime-glow: rgba(198, 249, 32, 0.4);
+  --c-purple: #B794F4; /* Soft Purple */
 }
 
 /* 배경색 */
@@ -318,3 +324,90 @@
     padding: 14px 24px;
   }
 }
+
+/* --- Landing C (Partner) Specific Styles --- */
+
+/* Partner Background (More subtle, Lime/Purple hints) */
+.partner-background {
+  position: fixed;
+  inset: 0;
+  z-index: 0;
+  background-color: #050505;
+  overflow: hidden;
+}
+
+.partner-background::before {
+  content: '';
+  position: absolute;
+  top: -20%; left: -20%; width: 140%; height: 140%;
+  background: radial-gradient(circle at 50% 50%, rgba(198, 249, 32, 0.08) 0%, transparent 60%);
+  filter: blur(80px);
+  animation: pulse-glow 8s ease-in-out infinite;
+}
+
+.partner-background::after {
+  content: '';
+  position: absolute;
+  bottom: -20%; right: -20%; width: 100%; height: 100%;
+  background: radial-gradient(circle at 50% 50%, rgba(183, 148, 244, 0.05) 0%, transparent 60%);
+  filter: blur(100px);
+}
+
+@keyframes pulse-glow {
+  0%, 100% { opacity: 0.5; transform: scale(1); }
+  50% { opacity: 0.8; transform: scale(1.1); }
+}
+
+/* Frosted Glass Panel (Landing C) */
+.glass-panel {
+  background: rgba(255, 255, 255, 0.02);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
+}
+
+/* Neon Lime Text */
+.text-lime-neon {
+  color: var(--c-lime);
+  text-shadow: 0 0 10px rgba(198, 249, 32, 0.3);
+}
+
+/* Input Portal Style */
+.partner-input {
+  background: rgba(255, 255, 255, 0.03);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 12px;
+  color: white;
+  transition: all 0.3s ease;
+}
+.partner-input:focus {
+  outline: none;
+  border-color: var(--c-lime);
+  background: rgba(255, 255, 255, 0.05);
+  box-shadow: 0 0 0 1px var(--c-lime-dim);
+}
+
+/* Solid Black Button -> Lime Hover */
+.partner-button {
+  background-color: #000;
+  border: 1px solid rgba(255,255,255,0.1);
+  color: white;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+.partner-button:hover:not(:disabled) {
+  background-color: var(--c-lime);
+  color: black;
+  border-color: var(--c-lime);
+  box-shadow: 0 0 20px var(--c-lime-dim);
+}
+
+/* Feature Card Hover Effect */
+.partner-card {
+  transition: transform 0.3s ease, border-color 0.3s ease;
+}
+.partner-card:hover {
+  transform: translateY(-5px);
+  border-color: rgba(198, 249, 32, 0.3);
+}
+
